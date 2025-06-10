@@ -106,4 +106,8 @@
 #define VEST_MASK      0x00200000
 #define CV_MASK        0x00400000
 
+//Added by Moein
+#define ESPH_MASK      0x08000000  
+#define DESPH_MASK     0x10000000
+
 #endif
