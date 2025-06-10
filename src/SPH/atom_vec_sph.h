@@ -36,7 +36,7 @@ class AtomVecSPH : virtual public AtomVec {
   void pack_property_atom(int, double *, int, int) override;
 
  protected:
-  double *rho, *drho, *esph, *desph, *cv;
+  double *rho, *drho, *esph, *desph, *cv, *rmass;
   double **vest;
 };
 
