@@ -555,12 +555,12 @@ void VerletKokkos::force_clear()
 
     // reset SPIN forces
 
-    if (extraflag) {
-      Kokkos::parallel_for(nall, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm.view<LMPDeviceType>()));
-      atomKK->modified(Device,FM_MASK);
-      Kokkos::parallel_for(nall, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm_long.view<LMPDeviceType>()));
-      atomKK->modified(Device,FML_MASK);
-    }
+    //if (extraflag) {
+    //   Kokkos::parallel_for(nall, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm.view<LMPDeviceType>()));
+    //  atomKK->modified(Device,FM_MASK);
+    //  Kokkos::parallel_for(nall, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm_long.view<LMPDeviceType>()));
+    //  atomKK->modified(Device,FML_MASK);
+    //}
 
   // neighbor includegroup flag is set
   // clear force only on initial nfirst particles
