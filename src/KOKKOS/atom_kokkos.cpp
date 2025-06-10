@@ -63,6 +63,14 @@ AtomKokkos::~AtomKokkos()
   memoryKK->destroy_kokkos(k_v, v);
   memoryKK->destroy_kokkos(k_f, f);
 
+  //Added by Moein for SPH
+  memoryKK->destroy_kokkos(k_vest, vest);
+  memoryKK->destroy_kokkos(k_cv, cv);
+  memoryKK->destroy_kokkos(k_rho, rho);
+  memoryKK->destroy_kokkos(k_drho, drho);
+  memoryKK->destroy_kokkos(k_esph, esph);
+  memoryKK->destroy_kokkos(k_desph, desph);
+
   memoryKK->destroy_kokkos(k_mass, mass);
   memoryKK->destroy_kokkos(k_q, q);
 
