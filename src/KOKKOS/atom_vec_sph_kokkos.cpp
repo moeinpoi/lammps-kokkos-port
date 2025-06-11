@@ -1231,7 +1231,7 @@ struct AtomVecSPHKokkos_UnpackBorder {
     _cv(cv),
     _first(first)
   {
-    const size_t elements = 15;
+    const size_t elements = 12;
     const int maxsend = (buf.extent(0)*buf.extent(1))/elements;
     _buf = typename ArrayTypes<DeviceType>::t_xfloat_2d_const_um(buf.data(),maxsend,elements);
   };
@@ -1244,15 +1244,12 @@ struct AtomVecSPHKokkos_UnpackBorder {
     _tag(i+_first) = static_cast<tagint> (d_ubuf(_buf(i,3)).i);
     _type(i+_first) = static_cast<int>  (d_ubuf(_buf(i,4)).i);
     _mask(i+_first) = static_cast<int>  (d_ubuf(_buf(i,5)).i);
-    _rho(i+_first) = _buf(i,6);
-    _esph(i+_first) = _buf(i,7);
-    _cv(i+_first) = _buf(i,8);
-    _v(i+_first,0) = _buf(i,9);
-    _v(i+_first,1) = _buf(i,10);
-    _v(i+_first,2) = _buf(i,11);
-    _vest(i+_first,0) = _buf(i,12);
-    _vest(i+_first,1) = _buf(i,13);
-    _vest(i+_first,2) = _buf(i,14);
+    _vest(i+_first,0) = _buf(i,6);
+    _vest(i+_first,1) = _buf(i,7);
+    _vest(i+_first,2) = _buf(i,8);
+    _rho(i+_first) = _buf(i,9);
+    _esph(i+_first) = _buf(i,10);
+    _cv(i+_first) = _buf(i,11);
   }
 };
 
@@ -1261,8 +1258,6 @@ struct AtomVecSPHKokkos_UnpackBorder {
 void AtomVecSPHKokkos::unpack_border_kokkos(const int &n, const int &first,
                                                const DAT::tdual_xfloat_2d &buf,ExecutionSpace space) {
   while (first+n >= nmax) grow(0);
-
-  //buf.sync<space>(); //added by Moein
 
   if (space==Host) {
     struct AtomVecSPHKokkos_UnpackBorder<LMPHostType> f(buf.view<LMPHostType>(),
