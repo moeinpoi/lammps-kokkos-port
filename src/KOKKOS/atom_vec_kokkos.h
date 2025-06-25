@@ -49,6 +49,8 @@ class AtomVecKokkos : virtual public AtomVec {
   virtual void modified(ExecutionSpace space, unsigned int mask) = 0;
   virtual void sync_overlapping_device(ExecutionSpace space, unsigned int mask) = 0;
 
+  virtual void force_clear_kokkos(int n, size_t nbytes) {}
+
   virtual int
     pack_comm_self(const int &n, const DAT::tdual_int_2d &list,
                    const int & iswap, const int nfirst,
