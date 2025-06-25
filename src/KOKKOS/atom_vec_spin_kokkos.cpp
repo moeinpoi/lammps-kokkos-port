@@ -592,31 +592,33 @@ int AtomVecSpinKokkos::unpack_exchange_kokkos(DAT::tdual_xfloat_2d &k_buf, int n
    include f b/c this is invoked from within SPIN pair styles
 ------------------------------------------------------------------------- */
 
-void AtomVecSpinKokkos::force_clear(int n, size_t nbytes)
+/* ---------------------------------------------------------------------- */
+
+void AtomVecSpinKokkos::force_clear_kokkos(int n, size_t nbytes)
 {
-  int nzero = (double)nbytes/sizeof(double);
+  int nzero = static_cast<int>(nbytes / sizeof(double));
+  if (nzero == 0) return;
 
-  if (nzero) {
-    atomKK->k_fm.clear_sync_state(); // will be cleared below
-    atomKK->k_fm_long.clear_sync_state(); // will be cleared below
+  atomKK->k_fm.clear_sync_state();
+  atomKK->k_fm_long.clear_sync_state();
 
-    // local variables for lambda capture
+  auto d_fm = atomKK->k_fm.d_view;
+  auto d_fm_long = atomKK->k_fm_long.d_view;
 
-    auto l_fm = atomKK->k_fm.d_view;
-    auto l_fm_long = atomKK->k_fm_long.d_view;
-
-    Kokkos::parallel_for(nzero, LAMMPS_LAMBDA(int i) {
-      l_fm(i,0) = 0.0;
-      l_fm(i,1) = 0.0;
-      l_fm(i,2) = 0.0;
-      l_fm_long(i,0) = 0.0;
-      l_fm_long(i,1) = 0.0;
-      l_fm_long(i,2) = 0.0;
+  Kokkos::parallel_for(
+    Kokkos::RangePolicy<LMPDeviceType>(n, n + nzero),
+    LAMMPS_LAMBDA(int i) {
+      d_fm(i,0) = 0.0;
+      d_fm(i,1) = 0.0;
+      d_fm(i,2) = 0.0;
+      d_fm_long(i,0) = 0.0;
+      d_fm_long(i,1) = 0.0;
+      d_fm_long(i,2) = 0.0;
     });
 
-    atomKK->modified(Device,FM_MASK|FML_MASK);
-  }
+  atomKK->modified(Device, FM_MASK | FML_MASK);
 }
+
 
 /* ---------------------------------------------------------------------- */
 
