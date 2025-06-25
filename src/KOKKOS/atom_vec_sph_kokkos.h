@@ -35,7 +35,9 @@ class AtomVecSPHKokkos : public AtomVecKokkos, public AtomVecSPH {
 
   void grow(int) override;
   void grow_pointers() override;
+  void force_clear_kokkos(int, size_t) override;
   void sort_kokkos(Kokkos::BinSort<KeyViewType, BinOp> &Sorter) override;
+  
 
   int pack_comm_kokkos(const int &n, const DAT::tdual_int_2d &k_sendlist,
                        const int & iswap,

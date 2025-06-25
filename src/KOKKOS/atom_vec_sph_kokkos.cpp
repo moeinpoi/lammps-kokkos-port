@@ -132,6 +132,31 @@ void AtomVecSPHKokkos::grow_pointers()
 }
 
 /* ----------------------------------------------------------------------
+   clear SPH force properties drho and desph
+------------------------------------------------------------------------- */
+
+void AtomVecSPHKokkos::force_clear_kokkos(int n, size_t nbytes)
+{
+  int nzero = static_cast<int>(nbytes / sizeof(double));
+  if (nzero == 0) return;
+
+  atomKK->k_drho.clear_sync_state();
+  atomKK->k_desph.clear_sync_state();
+
+  auto d_drho = atomKK->k_drho.d_view;
+  auto d_desph = atomKK->k_desph.d_view;
+
+  Kokkos::parallel_for(
+    Kokkos::RangePolicy<LMPDeviceType>(n, n + nzero),
+    LAMMPS_LAMBDA(int i) {
+      d_drho(i) = 0.0;
+      d_desph(i) = 0.0;
+    });
+
+  atomKK->modified(Device, DRHO_MASK | DESPH_MASK);
+}
+
+/* ----------------------------------------------------------------------
    sort atom arrays on device
 ------------------------------------------------------------------------- */
 
