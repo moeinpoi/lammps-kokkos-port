@@ -554,13 +554,12 @@ void VerletKokkos::force_clear()
     }
 
     // reset SPIN forces
+    // Changed by Moein, fallback to atom_vec specific force_clear method. 
+    // This avoids issues when SPH is used (which also has extraflag = 1)
 
-    //if (extraflag) {
-    //   Kokkos::parallel_for(nall, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm.view<LMPDeviceType>()));
-    //  atomKK->modified(Device,FM_MASK);
-    //  Kokkos::parallel_for(nall, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm_long.view<LMPDeviceType>()));
-    //  atomKK->modified(Device,FML_MASK);
-    //}
+    if (extraflag) {
+      atomKK->avecKK->force_clear_kokkos(0, sizeof(double) * nall);
+    }
 
   // neighbor includegroup flag is set
   // clear force only on initial nfirst particles
@@ -576,12 +575,11 @@ void VerletKokkos::force_clear()
     }
 
     // reset SPIN forces
+    // Changed by Moein, fallback to atom_vec specific force_clear method. 
+    // This avoids issues when SPH is used (which also has extraflag = 1)
 
     if (extraflag) {
-      Kokkos::parallel_for(atomKK->nfirst, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm.view<LMPDeviceType>()));
-      atomKK->modified(Device,FM_MASK);
-      Kokkos::parallel_for(atomKK->nfirst, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm_long.view<LMPDeviceType>()));
-      atomKK->modified(Device,FML_MASK);
+      atomKK->avecKK->force_clear_kokkos(0, sizeof(double) * atomKK->nfirst);
     }
 
     if (force->newton) {
@@ -595,12 +593,11 @@ void VerletKokkos::force_clear()
       }
 
       // reset SPIN forces
+      // Changed by Moein, fallback to atom_vec specific force_clear method. 
+      // This avoids issues when SPH is used (which also has extraflag = 1)
 
       if (extraflag) {
-        Kokkos::parallel_for(range, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm.view<LMPDeviceType>()));
-        atomKK->modified(Device,FM_MASK);
-        Kokkos::parallel_for(range, Zero<typename ArrayTypes<LMPDeviceType>::t_fm_array>(atomKK->k_fm_long.view<LMPDeviceType>()));
-        atomKK->modified(Device,FML_MASK);
+        atomKK->avecKK->force_clear_kokkos(atomKK->nlocal, sizeof(double) * atomKK->nghost);
       }
     }
   }
