@@ -37,6 +37,8 @@ AtomVecKokkos(lmp), AtomVecSPH(lmp)
 {
   no_border_vel_flag = 0;
   unpack_exchange_indices_flag = 1;
+  comm_f_only = 0; 
+  no_comm_vel_flag = 0;
 }
 
 /* ----------------------------------------------------------------------
