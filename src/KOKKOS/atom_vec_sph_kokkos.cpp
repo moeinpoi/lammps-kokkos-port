@@ -920,6 +920,168 @@ void AtomVecSPHKokkos::unpack_comm_vel_kokkos(
 
 /* ---------------------------------------------------------------------- */
 
+template<class DeviceType>
+struct AtomVecSPHKokkos_PackReverse {
+  typedef DeviceType device_type;
+
+  typename ArrayTypes<DeviceType>::t_f_array_randomread _f;
+  typename ArrayTypes<DeviceType>::t_float_1d _drho, _desph;
+  typename ArrayTypes<DeviceType>::t_ffloat_2d _buf;
+  int _first;
+
+  AtomVecSPHKokkos_PackReverse(
+      const typename DAT::tdual_f_array &f,
+      const typename DAT::tdual_float_1d &drho,
+      const typename DAT::tdual_float_1d &desph,
+      const typename DAT::tdual_ffloat_2d &buf,
+      const int& first):_f(f.view<DeviceType>()),_drho(drho.view<DeviceType>()),
+                        _desph(desph.view<DeviceType>()),_buf(buf.view<DeviceType>()),
+                        _first(first) {};
+
+  KOKKOS_INLINE_FUNCTION
+  void operator() (const int& i) const {
+    _buf(i,0) = _f(i+_first,0);
+    _buf(i,1) = _f(i+_first,1);
+    _buf(i,2) = _f(i+_first,2);
+    _buf(i,3) = _drho(i+_first);
+    _buf(i,4) = _desph(i+_first);
+  }
+};
+
+/* ---------------------------------------------------------------------- */
+
+int AtomVecSPHKokkos::pack_reverse_kokkos(const int &n, const int &first,
+    const DAT::tdual_ffloat_2d &buf) {
+    fprintf(screen, "pack_reverse_kokos called on AtomVecSPHKokkos\n");
+  if (commKK->reverse_comm_on_host) {
+    atomKK->sync(Host,F_MASK | DRHO_MASK | DESPH_MASK);
+    struct AtomVecSPHKokkos_PackReverse<LMPHostType> f(atomKK->k_f, atomKK->k_drho, atomKK->k_desph, buf,first);
+    Kokkos::parallel_for(n,f);
+  } else {
+    atomKK->sync(Device,F_MASK | DRHO_MASK | DESPH_MASK);
+    struct AtomVecSPHKokkos_PackReverse<LMPDeviceType> f(atomKK->k_f, atomKK->k_drho, atomKK->k_desph,buf,first);
+    Kokkos::parallel_for(n,f);
+  }
+
+  return n*size_reverse;
+}
+
+/* ---------------------------------------------------------------------- */
+
+template<class DeviceType>
+struct AtomVecSPHKokkos_UnPackReverseSelf {
+  typedef DeviceType device_type;
+
+  typename ArrayTypes<DeviceType>::t_f_array_randomread _f;
+  typename ArrayTypes<DeviceType>::t_float_1d _drho, _desph;
+  typename ArrayTypes<DeviceType>::t_f_array _fw;
+  typename ArrayTypes<DeviceType>::t_float_1d _drhow, _desphw;
+  int _nfirst;
+  typename ArrayTypes<DeviceType>::t_int_2d_const _list;
+  const int _iswap;
+
+  AtomVecSPHKokkos_UnPackReverseSelf(
+      const typename DAT::tdual_f_array &f,
+      const typename DAT::tdual_float_1d &drho,
+      const typename DAT::tdual_float_1d &desph,
+      const int &nfirst,
+      const typename DAT::tdual_int_2d &list,
+      const int & iswap):
+      _f(f.view<DeviceType>()),_drho(drho.view<DeviceType>()), _desph(desph.view<DeviceType>()),
+      _fw(f.view<DeviceType>()),_drhow(drho.view<DeviceType>()), _desphw(desph.view<DeviceType>()),
+      _nfirst(nfirst),_list(list.view<DeviceType>()),_iswap(iswap) {
+  };
+
+  KOKKOS_INLINE_FUNCTION
+  void operator() (const int& i) const {
+    const int j = _list(_iswap,i);
+    _fw(j,0) += _f(i+_nfirst,0);
+    _fw(j,1) += _f(i+_nfirst,1);
+    _fw(j,2) += _f(i+_nfirst,2);
+    _drhow(j) += _drho(i+_nfirst);
+    _desphw(j) += _desph(i+_nfirst);
+  }
+};
+
+/* ---------------------------------------------------------------------- */
+
+int AtomVecSPHKokkos::unpack_reverse_self(const int &n, const DAT::tdual_int_2d &list, const int & iswap,
+                                        const int nfirst) {
+  if (commKK->reverse_comm_on_host) {
+    atomKK->sync(Host,F_MASK | DRHO_MASK | DESPH_MASK);
+    struct AtomVecSPHKokkos_UnPackReverseSelf<LMPHostType> f(atomKK->k_f,atomKK->k_drho,atomKK->k_desph,nfirst,list,iswap);
+    Kokkos::parallel_for(n,f);
+    atomKK->modified(Host,F_MASK | DRHO_MASK | DESPH_MASK);
+  } else {
+    atomKK->sync(Device,F_MASK | DRHO_MASK | DESPH_MASK);
+    struct AtomVecSPHKokkos_UnPackReverseSelf<LMPDeviceType> f(atomKK->k_f,atomKK->k_drho, atomKK->k_desph,nfirst,list,iswap);
+    Kokkos::parallel_for(n,f);
+    atomKK->modified(Device,F_MASK | DRHO_MASK | DESPH_MASK);
+  }
+  return n*size_reverse;
+}
+
+/* ---------------------------------------------------------------------- */
+
+template<class DeviceType>
+struct AtomVecSPHKokkos_UnPackReverse {
+  typedef DeviceType device_type;
+
+  typename ArrayTypes<DeviceType>::t_f_array _f;
+  typename ArrayTypes<DeviceType>::t_float_1d _drho, _desph;
+  typename ArrayTypes<DeviceType>::t_ffloat_2d_const _buf;
+  typename ArrayTypes<DeviceType>::t_int_2d_const _list;
+  const int _iswap;
+
+  AtomVecSPHKokkos_UnPackReverse(
+      const typename DAT::tdual_f_array &f,
+      const typename DAT::tdual_float_1d &drho,
+      const typename DAT::tdual_float_1d &desph,
+      const typename DAT::tdual_ffloat_2d &buf,
+      const typename DAT::tdual_int_2d &list,
+      const int & iswap):
+      _f(f.view<DeviceType>()),_drho(drho.view<DeviceType>()),_desph(desph.view<DeviceType>()),
+      _list(list.view<DeviceType>()),_iswap(iswap) {
+        const size_t maxsend = (buf.view<DeviceType>().extent(0)*buf.view<DeviceType>().extent(1))/5;
+        const size_t elements = 5;
+        buffer_view<DeviceType>(_buf,buf,maxsend,elements);
+  };
+
+  KOKKOS_INLINE_FUNCTION
+  void operator() (const int& i) const {
+    const int j = _list(_iswap,i);
+    _f(j,0) += _buf(i,0);
+    _f(j,1) += _buf(i,1);
+    _f(j,2) += _buf(i,2);
+    _drho(j) += _buf(i,3);
+    _desph(j) += _buf(i,4);
+  }
+};
+
+/* ---------------------------------------------------------------------- */
+
+void AtomVecSPHKokkos::unpack_reverse_kokkos(const int &n,
+                                          const DAT::tdual_int_2d &list,
+                                          const int & iswap,
+                                          const DAT::tdual_ffloat_2d &buf)
+{
+  // Check whether to always run reverse communication on the host
+  // Choose correct reverse UnPackReverse kernel
+
+  if (commKK->reverse_comm_on_host) {
+    struct AtomVecSPHKokkos_UnPackReverse<LMPHostType> f(atomKK->k_f,atomKK->k_drho,atomKK->k_desph,buf,list,iswap);
+    Kokkos::parallel_for(n,f);
+    atomKK->modified(Host,F_MASK | DRHO_MASK | DESPH_MASK);
+  } else {
+    struct AtomVecSPHKokkos_UnPackReverse<LMPDeviceType> f(atomKK->k_f,atomKK->k_drho,atomKK->k_desph,buf,list,iswap);
+    Kokkos::parallel_for(n,f);
+    atomKK->modified(Device,F_MASK | DRHO_MASK | DESPH_MASK);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+
 template<class DeviceType,int PBC_FLAG>
 struct AtomVecSPHKokkos_PackBorder {
   typedef DeviceType device_type;
