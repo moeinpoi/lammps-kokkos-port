@@ -964,7 +964,7 @@ int AtomVecSPHKokkos::pack_reverse_kokkos(const int &n, const int &first,
     struct AtomVecSPHKokkos_PackReverse<LMPDeviceType> f(atomKK->k_f, atomKK->k_drho, atomKK->k_desph,buf,first);
     Kokkos::parallel_for(n,f);
   }
-
+  fprintf(screen, "size_reverse is= %d\n", size_reverse);
   return n*size_reverse;
 }
 
@@ -1020,7 +1020,7 @@ int AtomVecSPHKokkos::unpack_reverse_self(const int &n, const DAT::tdual_int_2d 
     Kokkos::parallel_for(n,f);
     atomKK->modified(Device,F_MASK | DRHO_MASK | DESPH_MASK);
   }
-  return n*size_reverse;
+  return n*5;
 }
 
 /* ---------------------------------------------------------------------- */
