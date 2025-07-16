@@ -147,8 +147,10 @@ void CommKokkos::init()
     reverse_comm_classic = true;
     fprintf(screen, "reverse_comm_classic set to true in comm_kokkos !comm_f_only check\n");
    }
-   else
+   else {
 	   fprintf(screen, "reverse_comm_classic was bypassed and not set to true at comm_kokkos\n");
+	   reverse_comm_classic = false;
+   }
 
 
   if (ghost_velocity && atomKK->avecKK->no_comm_vel_flag) // not all Kokkos atom_vec styles have comm vel pack/unpack routines yet
