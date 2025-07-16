@@ -150,7 +150,7 @@ void CommKokkos::init()
 
 
   if (ghost_velocity && atomKK->avecKK->no_comm_vel_flag) // not all Kokkos atom_vec styles have comm vel pack/unpack routines yet
-    forward_comm_classic = true;
+    forward_comm_classic = false;
 }
 
 /* ----------------------------------------------------------------------
