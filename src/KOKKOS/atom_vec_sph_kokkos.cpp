@@ -257,7 +257,6 @@ struct AtomVecSPHKokkos_PackComm {
 /* ---------------------------------------------------------------------- */
 
 int AtomVecSPHKokkos::pack_comm_kokkos(
-		fprintf(screen, "pack_comm_kokkos called on AtomVecSPHKokkos\n");
   const int &n,
   const DAT::tdual_int_2d &list,
   const int & iswap,
@@ -270,6 +269,7 @@ int AtomVecSPHKokkos::pack_comm_kokkos(
 //    return AtomVecKokkos::pack_comm_kokkos(n,list,iswap,buf,pbc_flag,pbc);  //RADVARY check is commented out because SPH doesn't need it. -Moein
   // Check whether to always run forward communication on the host
   // Choose correct forward PackComm kernel
+  fprintf(screen, "pack_comm_kokkos called on AtomVecSPHKokkos\n");
   if (commKK->forward_comm_on_host) {
     atomKK->sync(Host,X_MASK|RHO_MASK|ESPH_MASK|VEST_MASK);
     if (pbc_flag) {
@@ -469,7 +469,6 @@ struct AtomVecSPHKokkos_PackCommVel {
 /* ---------------------------------------------------------------------- */
 
 int AtomVecSPHKokkos::pack_comm_vel_kokkos(
-		fprintf(screen, "pack_comm_vel_kokkos called on AtomVecSPHKokkos\n");
   const int &n,
   const DAT::tdual_int_2d &list,
   const int & iswap,
@@ -477,6 +476,7 @@ int AtomVecSPHKokkos::pack_comm_vel_kokkos(
   const int &pbc_flag,
   const int* const pbc)
 {
+	fprintf(screen, "pack_comm_vel_kokkos called on AtomVecSPHKokkos\n");
   if (commKK->forward_comm_on_host) {
     atomKK->sync(Host,X_MASK|V_MASK|VEST_MASK|RHO_MASK|ESPH_MASK);
     if (pbc_flag) {
