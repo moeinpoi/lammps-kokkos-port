@@ -678,6 +678,7 @@ int AtomVec::pack_reverse(int n, int first, double *buf)
   }
 
   if (nreverse) {
+	  fprintf(screen, "pack_reverse called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nreverse; nn++) {
       pdata = mreverse.pdata[nn];
       datatype = mreverse.datatype[nn];
