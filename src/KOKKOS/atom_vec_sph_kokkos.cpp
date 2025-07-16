@@ -257,6 +257,7 @@ struct AtomVecSPHKokkos_PackComm {
 /* ---------------------------------------------------------------------- */
 
 int AtomVecSPHKokkos::pack_comm_kokkos(
+		fprintf(screen, "pack_comm_kokkos called on AtomVecSPHKokkos\n");
   const int &n,
   const DAT::tdual_int_2d &list,
   const int & iswap,
@@ -468,6 +469,7 @@ struct AtomVecSPHKokkos_PackCommVel {
 /* ---------------------------------------------------------------------- */
 
 int AtomVecSPHKokkos::pack_comm_vel_kokkos(
+		fprintf(screen, "pack_comm_vel_kokkos called on AtomVecSPHKokkos\n");
   const int &n,
   const DAT::tdual_int_2d &list,
   const int & iswap,

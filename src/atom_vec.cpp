@@ -379,6 +379,7 @@ int AtomVec::pack_comm(int n, int *list, double *buf, int pbc_flag, int *pbc)
   }
 
   if (ncomm) {
+	  fprintf(screen, "pack_comm called on AtomVecSPH CPU\n");
     for (nn = 0; nn < ncomm; nn++) {
       pdata = mcomm.pdata[nn];
       datatype = mcomm.datatype[nn];
@@ -496,6 +497,7 @@ int AtomVec::pack_comm_vel(int n, int *list, double *buf, int pbc_flag, int *pbc
   }
 
   if (ncomm_vel) {
+	  fprintf(screen, "pack_comm_vel called on AtomVecSPH CPU\n");
     for (nn = 0; nn < ncomm_vel; nn++) {
       pdata = mcomm_vel.pdata[nn];
       datatype = mcomm_vel.datatype[nn];
