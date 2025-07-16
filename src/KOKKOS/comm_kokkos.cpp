@@ -142,15 +142,11 @@ void CommKokkos::init()
   if (force->newton == 0) check_reverse = 0;
   if (force->pair) check_reverse += force->pair->comm_reverse_off;
 
-  if (!comm_f_only) // not all Kokkos atom_vec styles have reverse pack/unpack routines yet
-   if (atomKK->avecKK->no_border_vel_flag) {
-    reverse_comm_classic = true;
-    fprintf(screen, "reverse_comm_classic set to true in comm_kokkos !comm_f_only check\n");
-   }
-   else {
-	   fprintf(screen, "reverse_comm_classic was bypassed and not set to true at comm_kokkos\n");
-	   reverse_comm_classic = false;
-   }
+  if (!comm_f_only && atomKK->avecKK->no_border_vel_flag)  // not all Kokkos atom_vec styles have reverse pack/unpack routines yet
+							   // Added the no_border_flag check just to bypass if it is SPH, need to be changed later. -Moein Added else set to false to make sure pack_reverse_kokkos is called.  -Moein
+  	reverse_comm_classic = true;
+  else	reverse_comm_classic = false;
+
 
 
   if (ghost_velocity && atomKK->avecKK->no_comm_vel_flag) // not all Kokkos atom_vec styles have comm vel pack/unpack routines yet
