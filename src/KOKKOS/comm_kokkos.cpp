@@ -143,8 +143,13 @@ void CommKokkos::init()
   if (force->pair) check_reverse += force->pair->comm_reverse_off;
 
   if (!comm_f_only) // not all Kokkos atom_vec styles have reverse pack/unpack routines yet
-    fprintf(screen, "reverse_comm_classic set to true in comm_kokkos !comm_f_only check\n");
+   if (no_border_vel_flag != 0) {
     reverse_comm_classic = true;
+    fprintf(screen, "reverse_comm_classic set to true in comm_kokkos !comm_f_only check\n");
+   }
+   else
+	   fprintf(screen, "reverse_comm_classic was bypassed and not set to true at comm_kokkos\n");
+
 
   if (ghost_velocity && atomKK->avecKK->no_comm_vel_flag) // not all Kokkos atom_vec styles have comm vel pack/unpack routines yet
     forward_comm_classic = true;
