@@ -87,6 +87,7 @@ void FixSPHKokkos<DeviceType>::pre_force_item(int i) const
 template<class DeviceType>
 void FixSPHKokkos<DeviceType>::setup_pre_force(int)
 {
+	fprintf(screen, "setup_pre_force called on FixSPHKokkos\n");
   remap_v_flag = domain->deform_vremap;
   if (remap_v_flag && (!comm->ghost_velocity))
   error->all(FLERR, "Fix sph requires ghost atoms store velocity when deforming with remap v");
@@ -121,6 +122,7 @@ void FixSPHKokkos<DeviceType>::setup_pre_force_item(int i) const
 template<class DeviceType>
 void FixSPHKokkos<DeviceType>::initial_integrate(int /*vflag*/)
 {
+	fprintf(screen, "initial_integrate called on FixSPHKokkos\n");
   atomKK->sync(execution_space,datamask_read);
 
   x = atomKK->k_x.view<DeviceType>();
@@ -203,6 +205,7 @@ void FixSPHKokkos<DeviceType>::initial_integrate_rmass_item(int i) const
 template<class DeviceType>
 void FixSPHKokkos<DeviceType>::final_integrate()
 {
+	fprintf(screen, "final_integrate called on FixSPHKokkos\n");
   atomKK->sync(execution_space,datamask_read);
 
   v = atomKK->k_v.view<DeviceType>();
@@ -273,6 +276,7 @@ void FixSPHKokkos<DeviceType>::final_integrate_rmass_item(int i) const
 template<class DeviceType>
 void FixSPHKokkos<DeviceType>::cleanup_copy()
 {
+	fprintf(screen, "cleanup_copy called on FixSPHKokkos\n");
   id = style = nullptr;
   vatom = nullptr;
 }
