@@ -1156,6 +1156,7 @@ int AtomVecSPHKokkos::pack_border_kokkos(
   int n, DAT::tdual_int_2d k_sendlist, DAT::tdual_xfloat_2d buf,int iswap,
   int pbc_flag, int *pbc, ExecutionSpace space)
 {
+	fprintf(screen, "pack_border_kokos called on AtomVecSPHKokkos\n");
   X_FLOAT dx,dy,dz;
 
   // This was in atom_vec_dpd_kokkos but doesn't appear in any other atom_vec
