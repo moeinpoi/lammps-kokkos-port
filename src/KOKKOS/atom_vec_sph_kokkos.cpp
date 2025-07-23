@@ -1831,6 +1831,8 @@ void AtomVecSPHKokkos::sync(ExecutionSpace space, unsigned int mask)
     if (mask & ESPH_MASK) atomKK->k_esph.sync<LMPDeviceType>();
     if (mask & VEST_MASK) atomKK->k_vest.sync<LMPDeviceType>();
     if (mask & CV_MASK) atomKK->k_cv.sync<LMPDeviceType>();
+    if (mask & DRHO_MASK) atomKK->k_drho.sync<LMPDeviceType>();
+    if (mask & DESPH_MASK) atomKK->k_desph.sync<LMPDeviceType>();
   } else {
     if (mask & X_MASK) atomKK->k_x.sync<LMPHostType>();
     if (mask & V_MASK) atomKK->k_v.sync<LMPHostType>();
@@ -1843,6 +1845,8 @@ void AtomVecSPHKokkos::sync(ExecutionSpace space, unsigned int mask)
     if (mask & ESPH_MASK) atomKK->k_esph.sync<LMPHostType>();
     if (mask & VEST_MASK) atomKK->k_vest.sync<LMPHostType>();
     if (mask & CV_MASK) atomKK->k_cv.sync<LMPHostType>();
+    if (mask & DRHO_MASK) atomKK->k_drho.sync<LMPHostType>();
+    if (mask & DESPH_MASK) atomKK->k_desph.sync<LMPHostType>();
   }
 }
 
@@ -1915,6 +1919,8 @@ void AtomVecSPHKokkos::modified(ExecutionSpace space, unsigned int mask)
     if (mask & ESPH_MASK) atomKK->k_esph.modify<LMPDeviceType>();
     if (mask & VEST_MASK) atomKK->k_vest.modify<LMPDeviceType>();
     if (mask & CV_MASK) atomKK->k_cv.modify<LMPDeviceType>();
+    if (mask & DRHO_MASK) atomKK->k_drho.modify<LMPDeviceType>();
+    if (mask & DESPH_MASK) atomKK->k_desph.modify<LMPDeviceType>();
   } else {
     if (mask & X_MASK) atomKK->k_x.modify<LMPHostType>();
     if (mask & V_MASK) atomKK->k_v.modify<LMPHostType>();
@@ -1927,5 +1933,7 @@ void AtomVecSPHKokkos::modified(ExecutionSpace space, unsigned int mask)
     if (mask & ESPH_MASK) atomKK->k_esph.modify<LMPHostType>();
     if (mask & VEST_MASK) atomKK->k_vest.modify<LMPHostType>();
     if (mask & CV_MASK) atomKK->k_cv.modify<LMPHostType>();
+    if (mask & DRHO_MASK) atomKK->k_drho.modify<LMPHostType>();
+    if (mask & DESPH_MASK) atomKK->k_desph.modify<LMPHostType>();
   }
 }
