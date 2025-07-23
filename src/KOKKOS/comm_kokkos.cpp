@@ -145,7 +145,7 @@ void CommKokkos::init()
   if (!comm_f_only && atomKK->avecKK->no_border_vel_flag)  // not all Kokkos atom_vec styles have reverse pack/unpack routines yet
 							   // Added the no_border_flag check just to bypass if it is SPH, need to be changed later. -Moein Added else set to false to make sure pack_reverse_kokkos is called.  -Moein
   	reverse_comm_classic = true;
-  else	{reverse_comm_classic = false; forward_comm_classic = false;}
+  else	{reverse_comm_classic = true; forward_comm_classic = false; forward_exchange_classic = false;}
 
 
 
