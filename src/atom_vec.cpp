@@ -830,6 +830,7 @@ int AtomVec::pack_border(int n, int *list, double *buf, int pbc_flag, int *pbc)
   }
 
   if (nborder) {
+	  fprintf(screen, "pack_border called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nborder; nn++) {
       pdata = mborder.pdata[nn];
       datatype = mborder.datatype[nn];
@@ -960,6 +961,7 @@ int AtomVec::pack_border_vel(int n, int *list, double *buf, int pbc_flag, int *p
   }
 
   if (nborder_vel) {
+	  fprintf(screen, "pack_border_vel called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nborder_vel; nn++) {
       pdata = mborder_vel.pdata[nn];
       datatype = mborder_vel.datatype[nn];
@@ -1040,6 +1042,7 @@ void AtomVec::unpack_border(int n, int first, double *buf)
   }
 
   if (nborder) {
+	  fprintf(screen, "unpack_border called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nborder; nn++) {
       pdata = mborder.pdata[nn];
       datatype = mborder.datatype[nn];
@@ -1106,6 +1109,7 @@ void AtomVec::unpack_border_vel(int n, int first, double *buf)
   }
 
   if (nborder_vel) {
+	  fprintf(screen, "unpack_border_vel called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nborder_vel; nn++) {
       pdata = mborder_vel.pdata[nn];
       datatype = mborder_vel.datatype[nn];
@@ -1171,6 +1175,7 @@ int AtomVec::pack_exchange(int i, double *buf)
   buf[m++] = ubuf(image[i]).d;
 
   if (nexchange) {
+	  fprintf(screen, "pack_exchange called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nexchange; nn++) {
       pdata = mexchange.pdata[nn];
       datatype = mexchange.datatype[nn];
@@ -1265,6 +1270,7 @@ int AtomVec::unpack_exchange(double *buf)
   image[nlocal] = (imageint) ubuf(buf[m++]).i;
 
   if (nexchange) {
+	  fprintf(screen, "unpack_exchange called on AtomVecSPH CPU\n");
     for (nn = 0; nn < nexchange; nn++) {
       pdata = mexchange.pdata[nn];
       datatype = mexchange.datatype[nn];
