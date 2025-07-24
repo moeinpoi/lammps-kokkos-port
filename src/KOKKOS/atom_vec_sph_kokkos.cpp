@@ -943,13 +943,19 @@ struct AtomVecSPHKokkos_PackReverse {
       const typename DAT::tdual_float_1d &drho,
       const typename DAT::tdual_float_1d &desph,
       const typename DAT::tdual_ffloat_2d &buf,
-      const int& first):_f(f.view<DeviceType>()),_drho(drho.view<DeviceType>()),
-                        _desph(desph.view<DeviceType>()),_buf(buf.view<DeviceType>()),
-                        _first(first)   {
+      const int& first)
+      : _f(f.view<DeviceType>()),
+        _drho(drho.view<DeviceType>()),
+        _desph(desph.view<DeviceType>()),
+        _first(first)
+  {
     const size_t elements = 5;
-    const int maxsend = (buf.extent(0)*buf.extent(1))/elements;
-    _buf = typename ArrayTypes<DeviceType>::t_xfloat_2d_um(buf.data(),maxsend,elements);
-  };
+    const int maxsend = (buf.view<DeviceType>().extent(0) * buf.view<DeviceType>().extent(1)) / elements;
+
+    // Extract the correct view and create the unmanaged view
+    auto view = buf.view<DeviceType>();
+    _buf = typename ArrayTypes<DeviceType>::t_xfloat_2d_um(view.data(), maxsend, elements);
+  }
 
   KOKKOS_INLINE_FUNCTION
   void operator() (const int& i) const {
