@@ -1005,14 +1005,11 @@ struct AtomVecSPHKokkos_UnPackReverseSelf {
       const typename DAT::tdual_float_1d &desph,
       const int &nfirst,
       const typename DAT::tdual_int_2d &list,
-      const int & iswap):
-      _f(f.view<DeviceType>()),_drho(drho.view<DeviceType>()), _desph(desph.view<DeviceType>()),
-      _fw(f.view<DeviceType>()),_drhow(drho.view<DeviceType>()), _desphw(desph.view<DeviceType>()),
-      _nfirst(nfirst),_list(list.view<DeviceType>()),_iswap(iswap) { 
-    const size_t elements = 5;
-    const int maxsend = (buf.extent(0)*buf.extent(1))/elements;
-    _buf = typename ArrayTypes<DeviceType>::t_xfloat_2d_um(buf.data(),maxsend,elements);
-  };
+      const int & iswap)
+      : _f(f.view<DeviceType>()), _drho(drho.view<DeviceType>()), _desph(desph.view<DeviceType>()),
+        _fw(f.view<DeviceType>()), _drhow(drho.view<DeviceType>()), _desphw(desph.view<DeviceType>()),
+        _nfirst(nfirst), _list(list.view<DeviceType>()), _iswap(iswap)
+  {}
 
   KOKKOS_INLINE_FUNCTION
   void operator() (const int& i) const {
