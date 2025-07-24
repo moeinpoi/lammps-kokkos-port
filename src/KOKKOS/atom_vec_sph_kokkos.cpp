@@ -934,7 +934,7 @@ struct AtomVecSPHKokkos_PackReverse {
   typedef DeviceType device_type;
 
   typename ArrayTypes<DeviceType>::t_f_array_randomread _f;
-  typename ArrayTypes<DeviceType>::t_float_1d _drho, _desph;
+  typename ArrayTypes<DeviceType>::t_float_1d_randomread _drho, _desph;
   typename ArrayTypes<DeviceType>::t_ffloat_2d _buf;
   int _first;
 
@@ -982,7 +982,7 @@ struct AtomVecSPHKokkos_UnPackReverseSelf {
   typedef DeviceType device_type;
 
   typename ArrayTypes<DeviceType>::t_f_array_randomread _f;
-  typename ArrayTypes<DeviceType>::t_float_1d _drho, _desph;
+  typename ArrayTypes<DeviceType>::t_float_1d_randomread _drho, _desph;
   typename ArrayTypes<DeviceType>::t_f_array _fw;
   typename ArrayTypes<DeviceType>::t_float_1d _drhow, _desphw;
   int _nfirst;
