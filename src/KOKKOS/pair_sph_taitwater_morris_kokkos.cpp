@@ -303,7 +303,7 @@ void PairSPHTaitwaterMorrisKokkos<DeviceType>::operator()(TagPairSPHTaitwaterMor
 
       // Morris Viscosity (Morris, 1996)
 
-      F_FLOAT fvisc = 2 * d_viscosity(itype,jtype) / (d_rho(i) * d_rho(j));
+      F_FLOAT fvisc = 2 * d_viscosity(itype,jtype) / (rho(i) * rho(j));
 
 
       fvisc *= imass * jmass * wfd;
