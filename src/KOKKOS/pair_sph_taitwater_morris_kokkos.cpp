@@ -45,7 +45,7 @@ PairSPHTaitwaterMorrisKokkos<DeviceType>::PairSPHTaitwaterMorrisKokkos(LAMMPS *l
   atomKK = (AtomKokkos *) atom;
   execution_space = ExecutionSpaceFromDevice<DeviceType>::space;
   //read and modify masks needs to change for SPH fields -Moein
-  datamask_read = X_MASK | F_MASK | VEST_MASK | TYPE_MASK | MASS_MASK | DESPH_MASK | RHO_MASK | DRHO_MASK | ENERGY_MASK | VIRIAL_MASK;
+  datamask_read = X_MASK | F_MASK | VEST_MASK | TYPE_MASK | DESPH_MASK | RHO_MASK | DRHO_MASK | ENERGY_MASK | VIRIAL_MASK;
   datamask_modify = F_MASK | DESPH_MASK | DRHO_MASK | ENERGY_MASK | VIRIAL_MASK;
 }
 
@@ -245,7 +245,7 @@ void PairSPHTaitwaterMorrisKokkos<DeviceType>::operator()(TagPairSPHTaitwaterMor
   // compute pressure of atom i with Tait EOS
   F_FLOAT tmp = rho(i) / d_rho0(itype);
   F_FLOAT fi = tmp * tmp * tmp;
-  fi = d_B(itype) * (fi * fi * tmp - 1.0) / (d_rho(i) * d_rho(i));
+  fi = d_B(itype) * (fi * fi * tmp - 1.0) / (rho(i) * rho(i));
 
 
   //const AtomNeighborsConst d_neighbors_i = k_list.get_neighbors_const(i);
@@ -292,7 +292,7 @@ void PairSPHTaitwaterMorrisKokkos<DeviceType>::operator()(TagPairSPHTaitwaterMor
       // compute pressure of atom j with Tait EOS
       F_FLOAT tmp = rho(j) / d_rho0(jtype);
       F_FLOAT fj = tmp * tmp * tmp;
-      fj = d_B(jtype) * (fj * fj * tmp - 1.0) / (d_rho(j) * d_rho(j));
+      fj = d_B(jtype) * (fj * fj * tmp - 1.0) / (rho(j) * rho(j));
       
       V_FLOAT velx = vxtmp - v(j,0);
       V_FLOAT vely = vytmp - v(j,1);
