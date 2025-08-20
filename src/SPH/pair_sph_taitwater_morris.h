@@ -38,7 +38,7 @@ class PairSPHTaitwaterMorris : public Pair {
   double **cut, **viscosity;
   int first;
 
-  void allocate();
+  virtual void allocate();
 };
 
 }    // namespace LAMMPS_NS
