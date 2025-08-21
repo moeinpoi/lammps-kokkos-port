@@ -58,6 +58,7 @@ PairSPHTaitwaterMorris::~PairSPHTaitwaterMorris()
 
 void PairSPHTaitwaterMorris::compute(int eflag, int vflag)
 {
+	fprintf(screen, "compute() called on PairSPHTaitwaterMorris CPU\n");
   int i, j, ii, jj, inum, jnum, itype, jtype;
   double xtmp, ytmp, ztmp, delx, dely, delz, fpair;
 
