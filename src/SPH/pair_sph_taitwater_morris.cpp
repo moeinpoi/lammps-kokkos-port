@@ -42,6 +42,8 @@ PairSPHTaitwaterMorris::PairSPHTaitwaterMorris(LAMMPS *lmp) : Pair(lmp)
 
 PairSPHTaitwaterMorris::~PairSPHTaitwaterMorris()
 {
+  if (copymode) return;
+
   if (allocated) {
     memory->destroy(setflag);
     memory->destroy(cutsq);
