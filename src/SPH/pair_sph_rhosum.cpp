@@ -65,6 +65,7 @@ void PairSPHRhoSum::init_style()
 
 void PairSPHRhoSum::compute(int eflag, int vflag)
 {
+	fprintf(screen, "compute() called on PairSPHRhoSum CPU\n");
   int i, j, ii, jj, jnum, itype, jtype;
   double xtmp, ytmp, ztmp, delx, dely, delz;
   double rsq, imass, h, ih, ihsq;
