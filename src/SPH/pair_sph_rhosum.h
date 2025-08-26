@@ -41,7 +41,7 @@ class PairSPHRhoSum : public Pair {
   double **cut;
   int nstep, first;
 
-  void allocate();
+  virtual void allocate();
 };
 
 }    // namespace LAMMPS_NS

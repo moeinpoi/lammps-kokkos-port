@@ -50,14 +50,14 @@ class PairSPHRhoSumKokkos : public PairSPHRhoSum {
   void allocate() override;
 
   int pack_forward_comm_kokkos(int n, DAT::tdual_int_2d k_sendlist, int iswap_in, 
-                              DAT::tdual_xfloat_1d &buf, int /*pbc_flag*/, int * /*pbc*/) override;
+                              DAT::tdual_xfloat_1d &buf, int /*pbc_flag*/, int * /*pbc*/);
 
-  void unpack_forward_comm_kokkos(int n, int first_in, DAT::tdual_xfloat_1d &buf) override;
+  void unpack_forward_comm_kokkos(int n, int first_in, DAT::tdual_xfloat_1d &buf);
 
-  int PairSPHRhoSumKokkos<DeviceType>::pack_forward_comm(int n, int *list, double *buf,
+  int pack_forward_comm(int n, int *list, double *buf,
                                                       int /*pbc_flag*/, int * /*pbc*/);
 
-  void PairSPHRhoSumKokkos<DeviceType>::unpack_forward_comm(int n, int first, double *buf);                              
+  void unpack_forward_comm(int n, int first, double *buf);                              
 
   KOKKOS_INLINE_FUNCTION
   void operator()(TagPairSPHRhoSumCompute, const int&) const;
