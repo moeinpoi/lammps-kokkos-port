@@ -44,6 +44,8 @@ PairSPHRhoSum::PairSPHRhoSum(LAMMPS *lmp) : Pair(lmp)
 
 PairSPHRhoSum::~PairSPHRhoSum()
 {
+  if (copymode) return;
+  
   if (allocated) {
     memory->destroy(setflag);
     memory->destroy(cutsq);
