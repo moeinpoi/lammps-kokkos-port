@@ -146,7 +146,7 @@ void PairSPHRhoSumKokkos<DeviceType>::operator()(TagPairSPHRhoSumCompute, const 
   F_FLOAT wf;
 
   // initialize density with self-contribution,
-  if (domain->dimension == 3) {
+  if (dimension == 3) {
     /*
     // Lucy kernel, 3d
     wf = 2.0889086280811262819e0 / (h * h * h);
@@ -183,7 +183,7 @@ void PairSPHRhoSumKokkos<DeviceType>::operator()(TagPairSPHRhoSumCompute, const 
       const F_FLOAT ih = 1.0 / h;
       const F_FLOAT ihsq = ih * ih;
 
-      if (domain->dimension == 3) {
+      if (dimension == 3) {
         /*
         // Lucy kernel, 3d
         r = sqrt(rsq);
