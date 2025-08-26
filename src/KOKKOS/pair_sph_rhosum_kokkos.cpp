@@ -85,8 +85,6 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 
   k_cutsq.template sync<DeviceType>();
   k_cut.template sync<DeviceType>();
-  d_cutsq = k_cutsq.template view<DeviceType>();
-  d_cut   = k_cut.template view<DeviceType>();
 
   NeighListKokkos<DeviceType>* k_list = static_cast<NeighListKokkos<DeviceType>*>(list);
   d_numneigh = k_list->d_numneigh;
