@@ -141,7 +141,7 @@ void PairSPHRhoSumKokkos<DeviceType>::operator()(TagPairSPHRhoSumCompute, const 
   const X_FLOAT ztmp = x(i,2);
   const int itype = type(i);
   const F_FLOAT imass = mass(itype);
-  const F_FLOAT h = d_cut(itype, itype);
+  F_FLOAT h = d_cut(itype, itype);
   F_FLOAT wf;
 
   // initialize density with self-contribution,
