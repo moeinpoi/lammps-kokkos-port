@@ -20,6 +20,7 @@
 
 #include "atom_kokkos.h"
 #include "atom_masks.h"
+#include "comm.h"
 #include "error.h"
 #include "force.h"
 #include "kokkos.h"
@@ -28,6 +29,8 @@
 #include "neigh_list_kokkos.h"
 #include "neigh_request.h"
 #include "neighbor.h"
+#include "update.h"
+
 
 #include <cmath>
 
@@ -44,7 +47,7 @@ PairSPHRhoSumKokkos<DeviceType>::PairSPHRhoSumKokkos(LAMMPS *lmp) : PairSPHRhoSu
   kokkosable = 1;
   atomKK = (AtomKokkos *) atom;
   execution_space = ExecutionSpaceFromDevice<DeviceType>::space;
-  datamask_read = X_MASK | TYPE_MASK | MASS_MASK | RHO_MASK;
+  datamask_read = X_MASK | TYPE_MASK | RHO_MASK;
 }
 
 /* ---------------------------------------------------------------------- */
