@@ -106,7 +106,7 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   }
 
   // communicate densities
-  commKK->forward_comm(this);
+  comm->forward_comm(this);
   
 }
 
@@ -179,7 +179,7 @@ void PairSPHRhoSumKokkos<DeviceType>::operator()(TagPairSPHRhoSumCompute, const 
 
     if (rsq < d_cutsq(i, j)) {
       h = d_cut(itype, jtype);
-      const F_FLAOT ih = 1.0 / h;
+      const F_FLOAT ih = 1.0 / h;
       const F_FLOAT ihsq = ih * ih;
 
       if (domain->dimension == 3) {

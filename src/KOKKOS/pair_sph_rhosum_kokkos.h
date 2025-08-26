@@ -72,7 +72,7 @@ class PairSPHRhoSumKokkos : public PairSPHRhoSum {
  protected:
 
   typename AT::t_x_array_randomread x;
-  typename AT::t_float_1d_randomread rho;
+  typename AT::t_float_1d rho;
   typename AT::t_float_1d_randomread mass;
   typename AT::t_int_1d_randomread type;
 
