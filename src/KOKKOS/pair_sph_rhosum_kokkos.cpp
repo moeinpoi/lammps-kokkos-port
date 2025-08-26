@@ -83,8 +83,8 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   // newton_pair = force->newton_pair;
   dimension = domain->dimension;
 
-  k_cutsq.template sync<DeviceType>();
-  k_cut.template sync<DeviceType>();
+  //k_cutsq.template sync<DeviceType>();
+  //k_cut.template sync<DeviceType>();
 
   NeighListKokkos<DeviceType>* k_list = static_cast<NeighListKokkos<DeviceType>*>(list);
   d_numneigh = k_list->d_numneigh;
@@ -125,7 +125,14 @@ void PairSPHRhoSumKokkos<DeviceType>::init_style()
   request->set_kokkos_host(std::is_same<DeviceType,LMPHostType>::value &&
                            !std::is_same<DeviceType,LMPDeviceType>::value);
   request->set_kokkos_device(std::is_same<DeviceType,LMPDeviceType>::value);
-  request->enable_full(); 
+  request->enable_full();
+
+  k_cut   .template modify<LMPHostType>();
+  k_cutsq .template modify<LMPHostType>();
+  k_cut   .template sync<DeviceType>();
+  k_cutsq .template sync<DeviceType>();
+  d_cut   = k_cut  .template view<DeviceType>();
+  d_cutsq = k_cutsq.template view<DeviceType>(); 
 }
 
 /* ---------------------------------------------------------------------- */
