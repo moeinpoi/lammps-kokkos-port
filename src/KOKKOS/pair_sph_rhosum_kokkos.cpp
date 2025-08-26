@@ -176,7 +176,7 @@ void PairSPHRhoSumKokkos<DeviceType>::operator()(TagPairSPHRhoSumCompute, const 
     const X_FLOAT delz = ztmp - x(j,2);
     const F_FLOAT rsq = delx * delx + dely * dely + delz * delz;
 
-    if (rsq < d_cutsq(i, j)) {
+    if (rsq < d_cutsq(itype, jtype)) {
       h = d_cut(itype, jtype);
       const F_FLOAT ih = 1.0 / h;
       const F_FLOAT ihsq = ih * ih;
