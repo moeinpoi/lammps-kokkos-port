@@ -99,6 +99,7 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
       copymode = 1;
       // loop over neighbors of my atoms
       Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagPairSPHRhoSumCompute>(0,inum), *this);
+      Kokkos::fence("rho sum compute done");
       copymode = 0;
       atomKK->modified(execution_space,RHO_MASK);
     }
