@@ -102,11 +102,10 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
       Kokkos::fence("rho sum compute done");
       copymode = 0;
       atomKK->modified(execution_space,RHO_MASK);
+      // communicate densities
+      comm->forward_comm(this);
     }
   }
-
-  // communicate densities
-  comm->forward_comm(this);
   
 }
 
