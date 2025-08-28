@@ -71,7 +71,7 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   fprintf(screen, "compute() called on PairSPHRhoSumKokkos\n");
   eflag = eflag_in;
   vflag = vflag_in;
-  ev_init(eflag,vflag,0);  //safe, but is it required? -Moein
+  ev_init(eflag,vflag,0); 
 
   atomKK->sync(execution_space,datamask_read);
 
@@ -101,13 +101,12 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
       copymode = 1;
       // loop over neighbors of my atoms
       Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagPairSPHRhoSumCompute>(0,inum), *this);
-      Kokkos::fence("rho sum compute done");
       copymode = 0;
       atomKK->modified(execution_space,RHO_MASK);
-      // communicate densities
-      comm->forward_comm(this);
     }
   }
+  // communicate densities
+  comm->forward_comm(this);
   
 }
 
@@ -129,11 +128,11 @@ void PairSPHRhoSumKokkos<DeviceType>::init_style()
   request->set_kokkos_device(std::is_same<DeviceType,LMPDeviceType>::value);
   request->enable_full();
 
-  k_cut   .template modify<LMPHostType>();
-  k_cutsq .template modify<LMPHostType>();
-  k_cut   .template sync<DeviceType>();
-  k_cutsq .template sync<DeviceType>();
-  d_cut   = k_cut  .template view<DeviceType>();
+  k_cut.template modify<LMPHostType>();
+  k_cutsq.template modify<LMPHostType>();
+  k_cut.template sync<DeviceType>();
+  k_cutsq.template sync<DeviceType>();
+  d_cut = k_cut.template view<DeviceType>();
   d_cutsq = k_cutsq.template view<DeviceType>(); 
 }
 
