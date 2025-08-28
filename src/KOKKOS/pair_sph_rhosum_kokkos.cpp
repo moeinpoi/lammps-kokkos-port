@@ -68,7 +68,9 @@ PairSPHRhoSumKokkos<DeviceType>::~PairSPHRhoSumKokkos()
 template<class DeviceType>
 void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 {
-	fprintf(screen, "compute() called on PairSPHRhoSumKokkos\n");
+  fprintf(screen, "compute() called on PairSPHRhoSumKokkos\n");
+  eflag = eflag_in;
+  vflag = vflag_in;
   ev_init(eflag,vflag,0);  //safe, but is it required? -Moein
 
   atomKK->sync(execution_space,datamask_read);
