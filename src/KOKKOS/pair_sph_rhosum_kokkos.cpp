@@ -59,7 +59,9 @@ PairSPHRhoSumKokkos<DeviceType>::~PairSPHRhoSumKokkos()
   
   if (allocated) {
     memoryKK->destroy_kokkos(k_cutsq, cutsq);
+    cutsq = nullptr;
     memoryKK->destroy_kokkos(k_cut, cut);
+    cut = nullptr;
   }
 }
 
