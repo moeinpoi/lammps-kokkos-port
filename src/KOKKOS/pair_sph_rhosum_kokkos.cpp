@@ -55,14 +55,14 @@ PairSPHRhoSumKokkos<DeviceType>::PairSPHRhoSumKokkos(LAMMPS *lmp) : PairSPHRhoSu
 template<class DeviceType>
 PairSPHRhoSumKokkos<DeviceType>::~PairSPHRhoSumKokkos()
 {
-  if (copymode) return;
+  //if (copymode) return;
   
-  if (allocated) {
-    memoryKK->destroy_kokkos(k_cutsq, cutsq);
-    cutsq = nullptr;
-    memoryKK->destroy_kokkos(k_cut, cut);
-    cut = nullptr;
-  }
+  //if (allocated) {
+  //  memoryKK->destroy_kokkos(k_cutsq, cutsq);
+  //  cutsq = nullptr;
+  //  memoryKK->destroy_kokkos(k_cut, cut);
+  //  cut = nullptr;
+  //}
 }
 
 /* ---------------------------------------------------------------------- */
