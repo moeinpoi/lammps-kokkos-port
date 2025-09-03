@@ -35,7 +35,7 @@ struct TagPairSPHRhoSumPackForwardComm{};
 struct TagPairSPHRhoSumUnpackForwardComm{};
 
 template<class DeviceType>
-class PairSPHRhoSumKokkos : public PairSPHRhoSum {
+class PairSPHRhoSumKokkos : public PairSPHRhoSum, public KokkosBase {
  public:
   enum {EnabledNeighFlags=FULL}; //Only full for rhosum
   enum {COUL_FLAG=0}; //-Changed to 0 by Moein(?)
