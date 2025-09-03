@@ -23,6 +23,7 @@ PairStyle(sph/rhosum/kk/host,PairSPHRhoSumKokkos<LMPHostType>);
 #ifndef LMP_PAIR_SPH_RHOSUM_KOKKOS_H
 #define LMP_PAIR_SPH_RHOSUM_KOKKOS_H
 
+#include "kokkos_base.h"
 #include "pair_kokkos.h"
 #include "pair_sph_rhosum.h"
 #include "neigh_list_kokkos.h"
