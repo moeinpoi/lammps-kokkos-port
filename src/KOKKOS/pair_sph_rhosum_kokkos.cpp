@@ -101,13 +101,12 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
       copymode = 1;
       // loop over neighbors of my atoms
       Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagPairSPHRhoSumCompute>(0,inum), *this);
-      //copymode = 0;
+      copymode = 0;
       atomKK->modified(execution_space,RHO_MASK);
     }
   }
   // communicate densities
   comm->forward_comm(this);
-  copymode = 0;
   
 }
 
@@ -232,7 +231,9 @@ int PairSPHRhoSumKokkos<DeviceType>::pack_forward_comm_kokkos(int n, DAT::tdual_
   iswap = iswap_in;
   v_buf = buf.view<DeviceType>();
   rho = atomKK->k_rho.view<DeviceType>();
+  copymode = 1;
   Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagPairSPHRhoSumPackForwardComm>(0,n), *this);
+  copymode = 0;
   return n;
 
 }
@@ -254,7 +255,9 @@ void PairSPHRhoSumKokkos<DeviceType>::unpack_forward_comm_kokkos(int n, int firs
   firstrecv = first_in;
   v_buf = buf.view<DeviceType>();
   rho = atomKK->k_rho.view<DeviceType>();
+  copymode = 1;
   Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagPairSPHRhoSumUnpackForwardComm>(0, n), *this);
+  copymode = 0;
   atomKK->modified(execution_space, RHO_MASK);
 
 }
