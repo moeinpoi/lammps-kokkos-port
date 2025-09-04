@@ -55,14 +55,12 @@ PairSPHRhoSumKokkos<DeviceType>::PairSPHRhoSumKokkos(LAMMPS *lmp) : PairSPHRhoSu
 template<class DeviceType>
 PairSPHRhoSumKokkos<DeviceType>::~PairSPHRhoSumKokkos()
 {
-  //if (copymode) return;
+  if (copymode) return;
   
-  //if (allocated) {
-  //  memoryKK->destroy_kokkos(k_cutsq, cutsq);
-  //  cutsq = nullptr;
-  //  memoryKK->destroy_kokkos(k_cut, cut);
-  //  cut = nullptr;
-  //}
+  if (allocated) {
+    memoryKK->destroy_kokkos(k_cutsq, cutsq);
+    memoryKK->destroy_kokkos(k_cut, cut);
+  }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -103,12 +101,13 @@ void PairSPHRhoSumKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
       copymode = 1;
       // loop over neighbors of my atoms
       Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagPairSPHRhoSumCompute>(0,inum), *this);
-      copymode = 0;
+      //copymode = 0;
       atomKK->modified(execution_space,RHO_MASK);
     }
   }
   // communicate densities
   comm->forward_comm(this);
+  copymode = 0;
   
 }
 
