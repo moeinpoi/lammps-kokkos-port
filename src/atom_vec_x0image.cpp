@@ -29,7 +29,6 @@ using namespace LAMMPS_NS;
 
 AtomVecX0Image::AtomVecX0Image(LAMMPS *lmp) : AtomVec(lmp)
 {
-  if (lmp->citeme) lmp->citeme->add(cite_peri_package);
 
   molecular = Atom::ATOMIC;
 

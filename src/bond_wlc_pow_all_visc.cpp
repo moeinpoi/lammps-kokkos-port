@@ -303,7 +303,7 @@ double BondWLCPowAllVisc::single(int type, double rsq, int i, int j,
 void BondWLCPowAllVisc::generate_wrr()
 {
   int i;
-  F_FLOTA ww[3][3] = {{0}};
+  F_FLOAT ww[3][3] = {{0}};
   F_FLOAT v1, v2, factor, ss;
 
   for (i=0; i<5; i++){
