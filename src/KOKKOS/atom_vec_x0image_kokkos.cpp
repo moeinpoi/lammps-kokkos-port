@@ -28,7 +28,7 @@ using namespace LAMMPS_NS;
 /* ---------------------------------------------------------------------- */
 
 AtomVecX0ImageKokkos::AtomVecX0ImageKokkos(LAMMPS *lmp) : AtomVec(lmp),
-AtomVecKokkos(lmp), AtomVecX0Image(lmp), x0(nullptr)
+AtomVecKokkos(lmp), AtomVecX0Image(lmp)
 {
   unpack_exchange_indices_flag = 1;
 }
