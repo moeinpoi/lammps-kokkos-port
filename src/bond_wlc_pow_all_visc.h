@@ -57,7 +57,7 @@ class BondWLCPowAllVisc : public Bond {
 
 
   void allocate();
-  void generate_wrr();
+ // void generate_wrr();
 
 };
 
