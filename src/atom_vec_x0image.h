@@ -34,7 +34,7 @@ class AtomVecX0Image : virtual public AtomVec {
   int property_atom(const std::string &) override;
   void pack_property_atom(int, double *, int, int) override;
 
- private:
+ protected:
   double **x0;
 };
 
