@@ -38,9 +38,6 @@ class BondWLCPowAllVisc : public Bond {
   void init_style();
   double single(int, double, int, int, double &);
 
-  KOKKOS_INLINE_FUNCTION
-  void generate_wrr(double dx, double dy, double dz, double wrr[4]);
-
 
  protected:
 
@@ -53,11 +50,8 @@ class BondWLCPowAllVisc : public Bond {
   class FixStore *fix;
   int  init_on;
 
-
-
-
   void allocate();
- // void generate_wrr();
+  void generate_wrr();
 
 };
 
