@@ -25,18 +25,6 @@
 
 using namespace LAMMPS_NS;
 
-static const char cite_peri_package[] =
-    "PERI package for X0Imagedynamics: doi:10.1016/j.cpc.2008.06.011\n\n"
-    "@Article{Parks08,\n"
-    " author = {M. L. Parks and R. B. Lehoucq and S. J. Plimpton and S. A. Silling},\n"
-    " title = {Implementing X0Imagedynamics Within a Molecular Dynamics Code},\n"
-    " journal = {Comput.\\ Phys.\\ Commun.},\n"
-    " year =    2008,\n"
-    " volume =  179,\n"
-    " number =  11,\n"
-    " pages =   {777--783}\n"
-    "}\n\n";
-
 /* ---------------------------------------------------------------------- */
 
 AtomVecX0Image::AtomVecX0Image(LAMMPS *lmp) : AtomVec(lmp)
