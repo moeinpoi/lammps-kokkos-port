@@ -46,6 +46,9 @@ class AtomKokkos : public Atom {
 
   DAT::tdual_float_1d k_mass;
 
+  //Added by Moein for x0image
+  DAT::tdual_x_array k_x0;
+
   DAT::tdual_float_1d k_q;
   DAT::tdual_float_1d k_radius;
   DAT::tdual_float_1d k_rmass;

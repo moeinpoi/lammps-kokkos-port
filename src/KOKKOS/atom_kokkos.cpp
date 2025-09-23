@@ -70,6 +70,9 @@ AtomKokkos::~AtomKokkos()
   memoryKK->destroy_kokkos(k_drho, drho);
   memoryKK->destroy_kokkos(k_esph, esph);
   memoryKK->destroy_kokkos(k_desph, desph);
+ 
+  //Added by Moein for x0image
+  memoryKK->destroy_kokkos(k_x0, x0);
 
   memoryKK->destroy_kokkos(k_mass, mass);
   memoryKK->destroy_kokkos(k_q, q);
