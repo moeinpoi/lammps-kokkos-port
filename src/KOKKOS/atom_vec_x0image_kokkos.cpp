@@ -77,6 +77,8 @@ void AtomVecX0ImageKokkos::grow(int n)
 
 void AtomVecX0ImageKokkos::grow_pointers()
 {
+
+  create_atom_post();
   fprintf(screen, "grow_pointers called on AtomVecX0Image kokkos\n");
   tag = atomKK->tag;
   d_tag = atomKK->k_tag.d_view;
