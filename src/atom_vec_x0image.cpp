@@ -62,6 +62,7 @@ AtomVecX0Image::AtomVecX0Image(LAMMPS *lmp) : AtomVec(lmp)
 
 void AtomVecX0Image::grow_pointers()
 {
+	fprintf(screen, "grow_pointers() called on AtomVecX0Image CPU\n");
   x0 = atom->x0;
 }
 
@@ -71,6 +72,7 @@ void AtomVecX0Image::grow_pointers()
 
 void AtomVecX0Image::create_atom_post(int ilocal)
 {
+	fprintf(screen, "create_atom_post called on AtomVecX0Image CPU:\n");
   const auto xinit = atom->x;
   x0[ilocal][0] = xinit[ilocal][0];
   x0[ilocal][1] = xinit[ilocal][1];
