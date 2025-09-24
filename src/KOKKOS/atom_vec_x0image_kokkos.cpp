@@ -279,6 +279,7 @@ int AtomVecX0ImageKokkos::pack_border_kokkos(int n, DAT::tdual_int_2d k_sendlist
       Kokkos::parallel_for(n,f);
     }
   }
+  fprintf(screen, "size_border is %d\n", size_border);
   return n*size_border;
 }
 
