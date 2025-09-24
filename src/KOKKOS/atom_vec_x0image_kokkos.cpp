@@ -77,8 +77,6 @@ void AtomVecX0ImageKokkos::grow(int n)
 
 void AtomVecX0ImageKokkos::grow_pointers()
 {
-
-  create_atom_post();
   fprintf(screen, "grow_pointers called on AtomVecX0Image kokkos\n");
   tag = atomKK->tag;
   d_tag = atomKK->k_tag.d_view;
@@ -126,6 +124,24 @@ void AtomVecX0ImageKokkos::sort_kokkos(Kokkos::BinSort<KeyViewType, BinOp> &Sort
   Sorter.sort(LMPDeviceType(), d_x0);
 
   atomKK->modified(Device, ALL_MASK & ~F_MASK);
+}
+
+/* ---------------------------------------------------------------------- */
+
+void AtomVecX0ImageKokkos::create_atom_post(int ilocal) {
+
+  AtomVecX0Image::create_atom_post(ilocal);   // CPU sets x0 = x (host)
+  atomKK->k_x0.modify<LMPHostType>();         // tell Kokkos host changed
+  atomKK->k_x0.sync<LMPDeviceType>();
+}
+
+/* ---------------------------------------------------------------------- */
+
+void AtomVecX0ImageKokkos::data_atom_post(int ilocal) {
+
+  AtomVecX0Image::data_atom_post(ilocal);
+  atomKK->k_x0.modify<LMPHostType>();
+  atomKK->k_x0.sync<LMPDeviceType>();
 }
 
 /* ---------------------------------------------------------------------- */
