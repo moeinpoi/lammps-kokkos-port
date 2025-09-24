@@ -229,9 +229,9 @@ struct AtomVecX0ImageKokkos_PackBorder {
           _buf(i,3) = d_ubuf(_tag(j)).d;
           _buf(i,4) = d_ubuf(_type(j)).d;
           _buf(i,5) = d_ubuf(_mask(j)).d;
-          _buf(i,6) = _x0(j,0);
-          _buf(i,7) = _x0(j,1);
-          _buf(i,8) = _x0(j,2);
+          _buf(i,6) = _x0(j,0) + _dx;
+          _buf(i,7) = _x0(j,1) + _dy;
+          _buf(i,8) = _x0(j,2) + _dz;
       }
   }
 };
