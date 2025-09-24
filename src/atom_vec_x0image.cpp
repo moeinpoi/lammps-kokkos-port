@@ -86,6 +86,7 @@ void AtomVecX0Image::create_atom_post(int ilocal)
 
 void AtomVecX0Image::data_atom_post(int ilocal)
 {
+	fprintf(screen, "data_atom_post called on AtomVecX0Image CPU:\n");
   const auto xinit = atom->x;
   x0[ilocal][0] = xinit[ilocal][0];
   x0[ilocal][1] = xinit[ilocal][1];
