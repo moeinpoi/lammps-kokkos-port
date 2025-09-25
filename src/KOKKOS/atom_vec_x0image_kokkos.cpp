@@ -265,7 +265,6 @@ int AtomVecX0ImageKokkos::pack_border_kokkos(int n, DAT::tdual_int_2d k_sendlist
 {
   X_FLOAT dx,dy,dz;
 
-  atomKK->sync(space,ALL_MASK);
 
   if (pbc_flag != 0) {
     if (domain->triclinic == 0) {
