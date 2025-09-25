@@ -55,8 +55,6 @@ class AtomVecX0ImageKokkos : public AtomVecKokkos, public AtomVecX0Image {
   void modified(ExecutionSpace space, unsigned int mask) override;
   void sync_overlapping_device(ExecutionSpace space, unsigned int mask) override;
 
-  void create_atom_post(int ilocal) override;
-  void data_atom_post(int ilocal) override;
 
  protected:
 

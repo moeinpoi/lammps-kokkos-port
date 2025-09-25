@@ -128,27 +128,6 @@ void AtomVecX0ImageKokkos::sort_kokkos(Kokkos::BinSort<KeyViewType, BinOp> &Sort
 
 /* ---------------------------------------------------------------------- */
 
-void AtomVecX0ImageKokkos::create_atom_post(int ilocal) {
-
-	fprintf(screen, "create_atom_post called on AtomVecX0Image kokkos\n");
-
-  AtomVecX0Image::create_atom_post(ilocal);   // CPU sets x0 = x (host)
-  atomKK->k_x0.modify<LMPHostType>();         // tell Kokkos host changed
-  atomKK->k_x0.sync<LMPDeviceType>();
-}
-
-/* ---------------------------------------------------------------------- */
-
-void AtomVecX0ImageKokkos::data_atom_post(int ilocal) {
-
-	fprintf(screen, "data_atom_post called on AtomVecX0Image kokkos\n");
-
-  AtomVecX0Image::data_atom_post(ilocal);
-  atomKK->k_x0.modify<LMPHostType>();
-  atomKK->k_x0.sync<LMPDeviceType>();
-}
-
-/* ---------------------------------------------------------------------- */
 
 template<class DeviceType,int PBC_FLAG,int TRICLINIC>
 struct AtomVecX0ImageKokkos_PackComm {
