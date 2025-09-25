@@ -102,8 +102,9 @@ void AtomVecX0Image::data_atom_post(int ilocal)
 
 int AtomVecX0Image::property_atom(const std::string &name)
 {
-//  if (name == "vfrac") return 0;
-//  if (name == "s0") return 1;
+  if (name == "x0") return 0;
+  if (name == "y0") return 1;
+  if (name == "z0") return 2;
   return -1;
 }
 
@@ -118,4 +119,30 @@ void AtomVecX0Image::pack_property_atom(int index, double *buf, int nvalues, int
   int nlocal = atom->nlocal;
   int n = 0;
 
+  if (index == 0) {
+    for (int i = 0; i < nlocal; i++) {
+      if (mask[i] & groupbit)
+        buf[n] = x0[i][0];
+      else
+        buf[n] = 0.0;
+      n += nvalues;
+    }
+  } else if (index == 1) {
+    for (int i = 0; i < nlocal; i++) {
+      if (mask[i] & groupbit)
+        buf[n] = x0[i][1];
+      else
+        buf[n] = 0.0;
+      n += nvalues;
+    } 
+  } else if (index == 2) {
+    for (int i = 0; i < nlocal; i++) {
+      if (mask[i] & groupbit)
+        buf[n] = x0[i][2];
+      else
+        buf[n] = 0.0;
+      n += nvalues;
+    }
+  }
 }
+    
