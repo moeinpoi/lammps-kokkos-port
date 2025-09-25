@@ -132,7 +132,6 @@ void AtomVecX0ImageKokkos::sort_kokkos(Kokkos::BinSort<KeyViewType, BinOp> &Sort
 
 template<class DeviceType,int PBC_FLAG,int TRICLINIC>
 struct AtomVecX0ImageKokkos_PackComm {
-	fprintf(screen, "pack_comm called on AtomVecX0Image kokkos\n");
   typedef DeviceType device_type;
   typedef ArrayTypes<DeviceType> AT;
 
