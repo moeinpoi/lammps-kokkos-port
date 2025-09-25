@@ -113,6 +113,7 @@ void AtomVecX0ImageKokkos::grow_pointers()
 
 void AtomVecX0ImageKokkos::sort_kokkos(Kokkos::BinSort<KeyViewType, BinOp> &Sorter)
 {
+	fprintf(screen, "sort_kokkos called on AtomVecX0Image kokkos\n");
   atomKK->sync(Device, ALL_MASK & ~F_MASK);
 
   Sorter.sort(LMPDeviceType(), d_tag);
@@ -160,6 +161,7 @@ struct AtomVecX0ImageKokkos_PackComm {
 
   KOKKOS_INLINE_FUNCTION
   void operator() (const int& i) const {
+	  fprintf(screen, "pack_comm called on AtomVecX0Image kokkos\n");
         const int j = _list(_iswap,i);
       if (PBC_FLAG == 0) {
           _buf(i,0) = _x(j,0);
@@ -242,6 +244,8 @@ struct AtomVecX0ImageKokkos_PackBorder {
 int AtomVecX0ImageKokkos::pack_border_kokkos(int n, DAT::tdual_int_2d k_sendlist, DAT::tdual_xfloat_2d buf,int iswap,
                                int pbc_flag, int *pbc, ExecutionSpace space)
 {
+	          fprintf(screen, "pack_border_kokkos called on AtomVecX0Image kokkos\n");
+
   X_FLOAT dx,dy,dz;
 
 
@@ -330,6 +334,9 @@ struct AtomVecX0ImageKokkos_UnpackBorder {
 
 void AtomVecX0ImageKokkos::unpack_border_kokkos(const int &n, const int &first,
                      const DAT::tdual_xfloat_2d &buf,ExecutionSpace space) {
+
+	          fprintf(screen, "unpack_border_kokkos called on AtomVecX0Image kokkos\n");
+
   if (first+n >= nmax) {
     grow(first+n+100);
   }
@@ -443,6 +450,8 @@ int AtomVecX0ImageKokkos::pack_exchange_kokkos(const int &nsend,DAT::tdual_xfloa
                                               DAT::tdual_int_1d k_copylist,
                                               ExecutionSpace space)
 {
+	          fprintf(screen, "pack_exchange called on AtomVecX0Image kokkos\n");
+
   size_exchange = 14;
 
   if (nsend > (int) (k_buf.view<LMPHostType>().extent(0)*k_buf.view<LMPHostType>().extent(1))/size_exchange) {
@@ -534,6 +543,8 @@ int AtomVecX0ImageKokkos::unpack_exchange_kokkos(DAT::tdual_xfloat_2d &k_buf, in
                                                 int dim, X_FLOAT lo, X_FLOAT hi, ExecutionSpace space,
                                                 DAT::tdual_int_1d &k_indices)
 {
+	          fprintf(screen, "unpack_exchange_kk called on AtomVecX0Image kokkos\n");
+
   while (nlocal + nrecv/size_exchange >= nmax) grow(0);
 
   if (space == Host) {
