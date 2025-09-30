@@ -140,25 +140,6 @@ void AtomVecFullSPHX0Image::create_atom_post(int ilocal)
 }
 
 /* ----------------------------------------------------------------------
-   modify what AtomVec::data_atom() just unpacked
-   or initialize other atom quantities
-------------------------------------------------------------------------- */
-
-void AtomVecFullSPHX0Image::data_atom_post(int ilocal)
-{
-  vest[ilocal][0] = 0.0;
-  vest[ilocal][1] = 0.0;
-  vest[ilocal][2] = 0.0;
-  desph[ilocal] = 0.0;
-  drho[ilocal] = 0.0;
-
-  const auto xinit = atom->x;
-  x0[ilocal][0] = xinit[ilocal][0];
-  x0[ilocal][1] = xinit[ilocal][1];
-  x0[ilocal][2] = xinit[ilocal][2];
-}
-
-/* ----------------------------------------------------------------------
    assign an index to named atom property and return index
    return -1 if name is unknown to this atom style
 ------------------------------------------------------------------------- */
