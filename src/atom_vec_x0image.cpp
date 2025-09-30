@@ -31,6 +31,7 @@ AtomVecX0Image::AtomVecX0Image(LAMMPS *lmp) : AtomVec(lmp)
 {
 
   molecular = Atom::ATOMIC;
+  mass_type = PER_TYPE;
 
 //  atom->rmass_flag = 1;
 //  atom->peri_flag = 1;
