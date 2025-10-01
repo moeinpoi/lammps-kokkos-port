@@ -880,7 +880,7 @@ int AtomVecFullSPHX0ImageKokkos::pack_exchange_kokkos(const int &nsend,DAT::tdua
 
   size_exchange = 20+atom->maxspecial+2*atom->bond_per_atom+4*atom->angle_per_atom+
     5*atom->dihedral_per_atom+5*atom->improper_per_atom + 9; //+9 for SPH and X0 (3 vest, 3 x0, 1 for rho, esph, cv)
-  avecKK->size_exchange = size_exchange;  //not sure if needed -Moein
+//avecKK->size_exchange = size_exchange;  //not sure if needed -Moein
 
   //Not sure if sync is needed here -Moein
   atomKK->sync(space,
@@ -907,7 +907,7 @@ int AtomVecFullSPHX0ImageKokkos::pack_exchange_kokkos(const int &nsend,DAT::tdua
   }
 }
 
-/* ---------------------------------------------------------------------- */pack_comm_self() called on AtomVecSPH kokkos\n
+/* ---------------------------------------------------------------------- */
 template<class DeviceType,int OUTPUT_INDICES>
 struct AtomVecFullSPHX0ImageKokkos_UnpackExchangeFunctor {
   typedef DeviceType device_type;
