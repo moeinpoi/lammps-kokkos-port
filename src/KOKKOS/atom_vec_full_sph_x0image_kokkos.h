@@ -43,8 +43,7 @@ class AtomVecFullSPHX0ImageKokkos : public AtomVecKokkos, public AtomVecFullSPHX
                             ExecutionSpace space) override;
 
   void force_clear_kokkos(int, size_t) override;
-  
-  /*
+
   int pack_exchange_kokkos(const int &nsend,DAT::tdual_xfloat_2d &buf,
                            DAT::tdual_int_1d k_sendlist,
                            DAT::tdual_int_1d k_copylist,
@@ -54,13 +53,10 @@ class AtomVecFullSPHX0ImageKokkos : public AtomVecKokkos, public AtomVecFullSPHX
                              ExecutionSpace space,
                              DAT::tdual_int_1d &k_indices) override;
 
-  */
 
   void sync(ExecutionSpace space, unsigned int mask) override;
   void modified(ExecutionSpace space, unsigned int mask) override;
   void sync_overlapping_device(ExecutionSpace space, unsigned int mask) override;
-
-  /*
 
   int pack_comm_kokkos(const int &n, const DAT::tdual_int_2d &k_sendlist,
                        const int & iswap,
@@ -68,29 +64,31 @@ class AtomVecFullSPHX0ImageKokkos : public AtomVecKokkos, public AtomVecFullSPHX
                        const int &pbc_flag, const int pbc[]) override;
   void unpack_comm_kokkos(const int &n, const int &nfirst,
                           const DAT::tdual_xfloat_2d &buf) override;
-  int pack_comm_vel_kokkos(const int &n, const DAT::tdual_int_2d &k_sendlist,
+
+  /*int pack_comm_vel_kokkos(const int &n, const DAT::tdual_int_2d &k_sendlist,
                            const int & iswap,
                            const DAT::tdual_xfloat_2d &buf,
                            const int &pbc_flag, const int pbc[]) override;
   void unpack_comm_vel_kokkos(const int &n, const int &nfirst,
                               const DAT::tdual_xfloat_2d &buf) override;
-  int pack_comm_self(const int &n, const DAT::tdual_int_2d &list,
-                     const int & iswap, const int nfirst,
-                     const int &pbc_flag, const int pbc[]) override;
-  int pack_reverse_kokkos(const int &n, const int &nfirst,
-                        const DAT::tdual_ffloat_2d &buf) override;
-  int unpack_reverse_self(const int &n, const DAT::tdual_int_2d &list,
-                      const int & iswap, const int nfirst) override;
-  void unpack_reverse_kokkos(const int &n, const DAT::tdual_int_2d &list,
-                          const int & iswap, const DAT::tdual_ffloat_2d &buf) override;
   int pack_border_vel_kokkos(int n, DAT::tdual_int_2d k_sendlist,
                              DAT::tdual_xfloat_2d buf,int iswap,
                              int pbc_flag, int *pbc, ExecutionSpace space) override;
   void unpack_border_vel_kokkos(const int &n, const int &nfirst,
                                 const DAT::tdual_xfloat_2d &buf,
-                                ExecutionSpace space) override;
+                                ExecutionSpace space) override;  */
 
-  */
+  int pack_comm_self(const int &n, const DAT::tdual_int_2d &list,
+                     const int & iswap, const int nfirst,
+                     const int &pbc_flag, const int pbc[]) override;
+  int unpack_reverse_self(const int &n, const DAT::tdual_int_2d &list,
+                      const int & iswap, const int nfirst) override;
+                      
+  int pack_reverse_kokkos(const int &n, const int &nfirst,
+                        const DAT::tdual_ffloat_2d &buf) override;
+  void unpack_reverse_kokkos(const int &n, const DAT::tdual_int_2d &list,
+                          const int & iswap, const DAT::tdual_ffloat_2d &buf) override;
+
 
  protected:
   double *q;
