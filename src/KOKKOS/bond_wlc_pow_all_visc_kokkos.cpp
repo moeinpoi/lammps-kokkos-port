@@ -239,7 +239,7 @@ void BondWLCPowAllViscKokkos<DeviceType>::operator()(TagBondWLCPowAllViscCompute
 template<class DeviceType>
 void BondWLCPowAllViscKokkos<DeviceType>::allocate()
 {
-  BondWLCPowAllViscKokkos::allocate();
+  BondWLCPowAllVisc::allocate();
 
   int n = atom->nbondtypes;
   k_temp = DAT::tdual_ffloat_1d("BondWLCPowAllViscKokkos::temp",n+1);
