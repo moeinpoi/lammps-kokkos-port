@@ -57,6 +57,8 @@ BondWLCPowAllViscKokkos<DeviceType>::~BondWLCPowAllViscKokkos()
 template<class DeviceType>
 void BondWLCPowAllViscKokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 {
+
+	fprintf(screen, "compute() called on BondWLCPowAllVisc kokkos\n");
   eflag = eflag_in;
   vflag = vflag_in;
 
