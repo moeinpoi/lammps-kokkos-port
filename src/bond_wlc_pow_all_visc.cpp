@@ -45,6 +45,8 @@ BondWLCPowAllVisc::BondWLCPowAllVisc(LAMMPS *lmp) : Bond(lmp) {
 
 BondWLCPowAllVisc::~BondWLCPowAllVisc()
 {
+  if (copymode) return;
+
   if (allocated) {
     memory->destroy(setflag);
     memory->destroy(temp);
