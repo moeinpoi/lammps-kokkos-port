@@ -32,7 +32,7 @@ using namespace LAMMPS_NS;
 /* ---------------------------------------------------------------------- */
 
 template<class DeviceType>
-BondWLCPowAllViscKokkos<DeviceType>::BondWLCPowAllViscKokkos(LAMMPS *lmp) : BondWLCPowAllVisc(lmp), rand_pool(seed + comm->me)
+BondWLCPowAllViscKokkos<DeviceType>::BondWLCPowAllViscKokkos(LAMMPS *lmp) : BondWLCPowAllVisc(lmp), rand_pool(seed_ + comm->me)
 {
   atomKK = (AtomKokkos *) atom;
   neighborKK = (NeighborKokkos *) neighbor;

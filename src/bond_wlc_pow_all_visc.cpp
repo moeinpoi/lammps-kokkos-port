@@ -37,6 +37,7 @@ using namespace LAMMPS_NS;
 BondWLCPowAllVisc::BondWLCPowAllVisc(LAMMPS *lmp) : Bond(lmp) {
 
     random = new RanMars(lmp, 1000 + comm->me);
+    seed_ = (uint64_t)((comm->me + 3) * 2846u);
 
 }
 
@@ -173,10 +174,8 @@ void BondWLCPowAllVisc::allocate()
   allocated = 1;
   int n = atom->nbondtypes;
 
-  short unsigned seed;
-
-  seed = (comm->me+3)*2846;
-  seed48(&seed);
+  seed_ = (comm->me + 3) * 2846u;
+  srand48((long)seed_);
 
   memory->create(temp,n+1,"bond:temp");
   memory->create(r0,n+1,"bond:r0");

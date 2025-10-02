@@ -49,8 +49,9 @@ class BondWLCPowAllVisc : public Bond {
   char *id_fix;
   class FixStore *fix;
   int  init_on;
+  uint64_t seed_ = 0;
 
-  void allocate();
+  virtual void allocate();
   void generate_wrr();
 
 };
