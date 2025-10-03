@@ -50,6 +50,7 @@ AtomVecKokkos(lmp), AtomVecFullSPHX0Image(lmp)
 
 void AtomVecFullSPHX0ImageKokkos::grow(int n)
 {
+  if(comm->me==0)
   fprintf(screen, "grow() called on AtomVecFullSPHX0Image kokkos\n");
 
   auto DELTA = LMP_KOKKOS_AV_DELTA;
@@ -141,6 +142,7 @@ void AtomVecFullSPHX0ImageKokkos::grow(int n)
 
 void AtomVecFullSPHX0ImageKokkos::grow_pointers()
 {
+  if(comm->me==0)
   fprintf(screen, "grow_pointers() called on AtomVecFullSPHX0Image kokkos\n");
 
   tag = atomKK->tag;
@@ -276,6 +278,7 @@ void AtomVecFullSPHX0ImageKokkos::grow_pointers()
 
 void AtomVecFullSPHX0ImageKokkos::force_clear_kokkos(int n, size_t nbytes)
 {
+  if(comm->me==0)
   fprintf(screen, "force_clear_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   int nzero = static_cast<int>(nbytes / sizeof(double));
@@ -303,6 +306,7 @@ void AtomVecFullSPHX0ImageKokkos::force_clear_kokkos(int n, size_t nbytes)
 
 void AtomVecFullSPHX0ImageKokkos::sort_kokkos(Kokkos::BinSort<KeyViewType, BinOp> &Sorter)
 {
+  if(comm->me==0)
   fprintf(screen, "sort_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   atomKK->sync(Device, ALL_MASK & ~F_MASK);
@@ -437,6 +441,7 @@ int AtomVecFullSPHX0ImageKokkos::pack_border_kokkos(int n, DAT::tdual_int_2d k_s
                                                int pbc_flag, int *pbc, ExecutionSpace space)
 {
 
+  if(comm->me==0)
   fprintf(screen, "pack_border_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   X_FLOAT dx,dy,dz;
@@ -561,6 +566,7 @@ void AtomVecFullSPHX0ImageKokkos::unpack_border_kokkos(const int &n, const int &
  //                  X0_MASK|VEST_MASK|RHO_MASK|ESPH_MASK|CV_MASK);
 
   
+  if(comm->me==0)
   fprintf(screen, "unpack_border_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   while (first+n >= nmax) grow(0);
@@ -1079,6 +1085,7 @@ int AtomVecFullSPHX0ImageKokkos::unpack_exchange_kokkos(DAT::tdual_xfloat_2d &k_
                                               DAT::tdual_int_1d &k_indices)
 {
 
+  if(comm->me==0)
   fprintf(screen, "unpack_exchange_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   while (nlocal + nrecv/size_exchange >= nmax) grow(0);
@@ -1212,7 +1219,8 @@ int AtomVecFullSPHX0ImageKokkos::pack_comm_kokkos(
 //    return AtomVecKokkos::pack_comm_kokkos(n,list,iswap,buf,pbc_flag,pbc);  //RADVARY check is commented out because SPH doesn't need it. -Moein
   // Check whether to always run forward communication on the host
   // Choose correct forward PackComm kernel
-  fprintf(screen, "pack_comm_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
+  if(comm->me==0)
+fprintf(screen, "pack_comm_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   if (commKK->forward_comm_on_host) {
     atomKK->sync(Host,X_MASK|RHO_MASK|ESPH_MASK|VEST_MASK);
@@ -1353,7 +1361,8 @@ void AtomVecFullSPHX0ImageKokkos::unpack_comm_kokkos(
   const int &n, const int &first,
   const DAT::tdual_xfloat_2d &buf) {
 
-	fprintf(screen, "unpack_comm_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
+	if(comm->me==0)
+fprintf(screen, "unpack_comm_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   if (commKK->forward_comm_on_host) {
     struct AtomVecFullSPHX0ImageKokkos_UnpackComm<LMPHostType> f(
@@ -1447,7 +1456,8 @@ int AtomVecFullSPHX0ImageKokkos::pack_comm_self(
   const int &n, const DAT::tdual_int_2d &list, const int &iswap,
   const int nfirst, const int &pbc_flag, const int* const pbc) { 
 
-  fprintf(screen, "pack_comm_self() called on AtomVecFullSPHX0Image kokkos\n");
+  if(comm->me==0)
+fprintf(screen, "pack_comm_self() called on AtomVecFullSPHX0Image kokkos\n");
 
   if (commKK->forward_comm_on_host) {
     atomKK->sync(Host,X_MASK|VEST_MASK|RHO_MASK|ESPH_MASK);
@@ -1583,7 +1593,8 @@ struct AtomVecFullSPHX0ImageKokkos_UnPackReverseSelf {
 int AtomVecFullSPHX0ImageKokkos::unpack_reverse_self(const int &n, const DAT::tdual_int_2d &list, const int & iswap,
                                         const int nfirst) {
 
-	fprintf(screen, "unpack_reverse_self() called on AtomVecFullSPHX0Image kokkos\n");
+	if(comm->me==0)
+fprintf(screen, "unpack_reverse_self() called on AtomVecFullSPHX0Image kokkos\n");
 
   if (commKK->reverse_comm_on_host) {
     atomKK->sync(Host,F_MASK | DRHO_MASK | DESPH_MASK);
@@ -1644,7 +1655,8 @@ struct AtomVecFullSPHX0ImageKokkos_PackReverse {
 int AtomVecFullSPHX0ImageKokkos::pack_reverse_kokkos(const int &n, const int &first,
     const DAT::tdual_ffloat_2d &buf) {
 
-    fprintf(screen, "pack_reverse_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
+    if(comm->me==0)
+fprintf(screen, "pack_reverse_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   if (commKK->reverse_comm_on_host) {
     atomKK->sync(Host,F_MASK | DRHO_MASK | DESPH_MASK);
@@ -1655,7 +1667,8 @@ int AtomVecFullSPHX0ImageKokkos::pack_reverse_kokkos(const int &n, const int &fi
     struct AtomVecFullSPHX0ImageKokkos_PackReverse<LMPDeviceType> f(atomKK->k_f, atomKK->k_drho, atomKK->k_desph,buf,first);
     Kokkos::parallel_for(n,f);
   }
-  fprintf(screen, "size_reverse is= %d\n", size_reverse);
+  if(comm->me==0)
+fprintf(screen, "size_reverse is= %d\n", size_reverse);
   return n*size_reverse;
 }
 
@@ -1705,7 +1718,8 @@ void AtomVecFullSPHX0ImageKokkos::unpack_reverse_kokkos(const int &n,
 {
   // Check whether to always run reverse communication on the host
   // Choose correct reverse UnPackReverse kernel
-   fprintf(screen, "unpack_reverse_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
+   if(comm->me==0)
+fprintf(screen, "unpack_reverse_kokkos() called on AtomVecFullSPHX0Image kokkos\n");
 
   if (commKK->reverse_comm_on_host) {
     struct AtomVecFullSPHX0ImageKokkos_UnPackReverse<LMPHostType> f(atomKK->k_f,atomKK->k_drho,atomKK->k_desph,buf,list,iswap);
