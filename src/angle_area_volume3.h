@@ -36,7 +36,7 @@ class AngleAreaVolume3 : public Angle {
   void read_restart(FILE *);
   void write_data(FILE *);
   double single(int, int, int, int);
-  void init_style();
+  void init_style() {};
 
  protected:
   double *press, *ka, *a0, *kv, *v0, *kl, *aa0, *r0, *qp, *vratio;
@@ -45,13 +45,8 @@ class AngleAreaVolume3 : public Angle {
   int init_on;
   double *h_area,*h_volume,*dath,*datt;
   int nm;
-//  char *id_fix;
-//  class FixStore *fix;
-//  void ev_tally2(int, int, int, int, int, double, double *, double *, double *,
-//                double, double, double, double, double, double, double, double, double);
 
-  void ev_tally3(int, int, int, int, int, double, double *, double *, double *,
-                double *);
+  void ev_tally3(int, int, int, int, int, double, double *, double *, double *, double *);
   void allocate();
 };
 
@@ -60,10 +55,3 @@ class AngleAreaVolume3 : public Angle {
 #endif
 #endif
 
-/* ERROR/WARNING messages:
-
-E: Incorrect args for angle coefficients
-
-Self-explanatory.  Check the input script or data file.
-
-*/
