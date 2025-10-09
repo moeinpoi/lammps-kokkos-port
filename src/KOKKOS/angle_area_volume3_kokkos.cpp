@@ -114,6 +114,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   nlocal = atom->nlocal;
   newton_bond = force->newton_bond;
 
+  tagint nm, nmol;
   nm = 0;
   nmol = 0;
   //find max mol ID in this rank
@@ -394,9 +395,9 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   const int type = anglelist(n,3);
 
   int m;
-  if(i1<nlocal) m = atom->molecule[i1]-1;
-  if(i2<nlocal) m = atom->molecule[i2]-1;
-  if(i3<nlocal) m = atom->molecule[i3]-1; 
+  if(i1<nlocal) m = molecule(i1)-1;
+  if(i2<nlocal) m = molecule(i2)-1;
+  if(i3<nlocal) m = molecule(i3)-1;
 
   //Initial local area
   // 2-1 distance
