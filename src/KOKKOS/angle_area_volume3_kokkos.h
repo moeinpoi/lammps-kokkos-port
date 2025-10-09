@@ -55,6 +55,10 @@ class AngleAreaVolume3Kokkos : public AngleAreaVolume3 {
   KOKKOS_INLINE_FUNCTION
   void operator()(TagAngleAreaVolume3Compute<NEWTON_BOND,EVFLAG>, const int&) const;
 
+  template<int NEWTON_BOND>
+  KOKKOS_INLINE_FUNCTION
+  void operator()(TagAngleAreaVolume3LocalLoop<NEWTON_BOND>, const int&) const;
+
   //template<int NEWTON_BOND>
   KOKKOS_INLINE_FUNCTION
   void ev_tally(EV_FLOAT &ev, const int i, const int j, const int k,
