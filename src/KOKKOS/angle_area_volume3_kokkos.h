@@ -25,6 +25,7 @@ AngleStyle(area/volume3/kk/host,AngleAreaVolume3Kokkos<LMPHostType>);
 
 #include "angle_area_volume3.h"
 #include "kokkos_type.h"
+#include "few.h"
 
 namespace LAMMPS_NS {
 
