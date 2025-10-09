@@ -165,7 +165,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
     k_ttyp1.template sync<LMPHostType>();
 
     init_on = 1;
-    MPI_Allreduce(d_ttyp1,d_ttyp,nm,MPI_INT,MPI_MAX,world);
+    MPI_Allreduce(ttyp1,ttyp,nm,MPI_INT,MPI_MAX,world);
   }
 
   Kokkos::deep_copy(d_h_area, 0);
@@ -484,7 +484,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   const F_FLOAT ttyp1 = d_ttyp1[type];
 
   bigint ntimestep = update->ntimestep;
-  F_FLAOT voltemp, tempxxx;
+  F_FLOAT voltemp, tempxxx;
 
   if(ntimestep < nstep1) {
     voltemp = v0;
@@ -637,13 +637,13 @@ void AngleAreaVolume3Kokkos<DeviceType>::allocate()
   d_qp = k_qp.template view<DeviceType>();
   k_r0 = typename ArrayTypes<DeviceType>::tdual_ffloat_1d("AngleAreaVolume3::r0",n+1);
   d_r0 = k_r0.template view<DeviceType>();
-  k_nstep1 = typename ArrayTypes<DeviceType>::tdual_ffloat_1d("AngleAreaVolume3::nstep1",n+1);
+  k_nstep1 = typename ArrayTypes<DeviceType>::tdual_int_1d("AngleAreaVolume3::nstep1",n+1);
   d_nstep1 = k_nstep1.template view<DeviceType>();
-  k_nstep2 = typename ArrayTypes<DeviceType>::tdual_ffloat_1d("AngleAreaVolume3::nstep2",n+1);
+  k_nstep2 = typename ArrayTypes<DeviceType>::tdual_int_1d("AngleAreaVolume3::nstep2",n+1);
   d_nstep2 = k_nstep2.template view<DeviceType>();
   k_vratio = typename ArrayTypes<DeviceType>::tdual_ffloat_1d("AngleAreaVolume3::vratio",n+1);
   d_vratio = k_vratio.template view<DeviceType>();
-  k_setflag = typename ArrayTypes<DeviceType>::tdual_ffloat_1d("AngleAreaVolume3::setflag",n+1);
+  k_setflag = typename ArrayTypes<DeviceType>::tdual_int_1d("AngleAreaVolume3::setflag",n+1);
   d_setflag = k_setflag.template view<DeviceType>();
 
 }
