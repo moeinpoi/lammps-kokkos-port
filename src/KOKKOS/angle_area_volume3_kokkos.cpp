@@ -47,9 +47,9 @@ AngleAreaVolume3Kokkos<DeviceType>::AngleAreaVolume3Kokkos(LAMMPS *lmp) : AngleA
   datamask_read = X_MASK | X0_MASK | F_MASK | ENERGY_MASK | MOLECULE_MASK | IMAGE_MASK | VIRIAL_MASK; 
   datamask_modify = F_MASK | ENERGY_MASK | VIRIAL_MASK;
 
-  prd = Few<double,3>(domain_in->prd);
-  h   = Few<double,6>(domain_in->h);
-  triclinic = domain_in->triclinic;
+  prd = Few<double,3>(domain->prd);
+  h   = Few<double,6>(domain->h);
+  triclinic = domain->triclinic;
 
   centroidstressflag = CENTROID_NOTAVAIL;
 }
@@ -165,7 +165,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
     k_ttyp1.template sync<LMPHostType>();
 
     init_on = 1;
-    MPI_Allreduce(d_ttyp1,d_ttyp,nm,MPI_LMP_TAGINT,MPI_MAX,world);
+    MPI_Allreduce(d_ttyp1,d_ttyp,nm,MPI_INT,MPI_MAX,world);
   }
 
   Kokkos::deep_copy(d_h_area, 0);
@@ -186,9 +186,16 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 
   copymode = 0;
 
-  MPI_Allreduce(d_dath,d_datt,2*nm,MPI_DOUBLE,MPI_SUM,world);
+  k_datt.template modify<DeviceType>();
+  k_datt.template sync<LMPHostType>();
+  k_dath.template modify<DeviceType>();
+  k_dath.template sync<LMPHostType>();
+  k_h_area.template modify<DeviceType>();
+  k_h_area.template sync<LMPHostType>();
+  k_h_volume.template modify<DeviceType>();
+  k_h_volume.template sync<LMPHostType>();
 
-  
+  MPI_Allreduce(dath,datt,2*nm,MPI_DOUBLE,MPI_SUM,world);
 
   if (eflag) {
     for (int m = 0; m < nm; m++) {
@@ -295,7 +302,8 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3LocalLoop
   const X_FLOAT nz = d21x*d31y - d31x*d21y;
   const X_FLOAT nn = sqrt(nx*nx + ny*ny + nz*nz);
 
-  X_FLOAT xx1[3], xx2[3], xx3[3];
+  // X_FLOAT xx1[3], xx2[3], xx3[3];
+  Few<X_FLOAT,3> xx1, xx2, xx3;
   // calculate center
   for (int j = 0; j < 3; j++) {
     xx1[j] = x(i1,j);
@@ -368,15 +376,6 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3LocalLoop
       }
     }
   } 
-
-  k_datt.template modify<DeviceType>();
-  k_datt.template sync<LMPHostType>();
-  k_dath.template modify<DeviceType>();
-  k_dath.template sync<LMPHostType>();
-  k_h_area.template modify<DeviceType>();
-  k_h_area.template sync<LMPHostType>();
-  k_h_volume.template modify<DeviceType>();
-  k_h_volume.template sync<LMPHostType>();
 }
 
 template<class DeviceType>
@@ -437,7 +436,8 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   nn = sqrt(nx*nx + ny*ny + nz*nz);
 
   // calculate center
-  X_FLOAT xx1[3], xx2[3], xx3[3];
+  // X_FLOAT xx1[3], xx2[3], xx3[3];
+  Few<X_FLOAT,3> xx1, xx2, xx3;
   for (int j = 0; j < 3; j++) {
     xx1[j] = x(i1,j);
     xx2[j] = x(i2,j);
