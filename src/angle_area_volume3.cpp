@@ -46,7 +46,7 @@ AngleAreaVolume3::AngleAreaVolume3(LAMMPS *lmp) : Angle(lmp)
 
 AngleAreaVolume3::~AngleAreaVolume3()
 {
-  if (allocated) {
+  if (allocated && !copymode) {
     memory->destroy(setflag);
     memory->destroy(ka);
     memory->destroy(a0);
@@ -62,7 +62,7 @@ AngleAreaVolume3::~AngleAreaVolume3()
     memory->destroy(vratio);
   }
 
-  if (init_on){
+  if (init_on && !copymode) {
     memory->destroy(h_area);
     memory->destroy(h_volume);
     memory->destroy(ttyp);
@@ -104,15 +104,17 @@ void AngleAreaVolume3::compute(int eflag, int vflag)
   tagint *tag = atom->tag;
 
   int i, nnmol;
-  nm = 0;
+  nm = 0; 
   nnmol = 0;
 
+  //find max mol ID in this rank
   for (i=0; i<nlocal; i++) {
     if (nnmol < atom->molecule[i]) {
       nnmol = atom->molecule[i];
     }
   }
 
+  //highest mol ID in the entire sim (across all ranks) will be stored in nm
   MPI_Allreduce(&nnmol,&nm,1,MPI_INT,MPI_MAX,world);
 
   if (init_on == 0) {
@@ -143,7 +145,7 @@ void AngleAreaVolume3::compute(int eflag, int vflag)
     MPI_Allreduce(ttyp1,ttyp,nm,MPI_INT,MPI_MAX,world);
   }
 
-  eangle = 0.0;
+  eangle = 0.0
   if (eflag || vflag) ev_setup(eflag,vflag);
   else evflag = 0;
 
@@ -627,96 +629,3 @@ double AngleAreaVolume3::single(int type, int i1, int i2, int i3)
     return -1;
 }
 
-/* ----------------------------------------------------------------------
-   tally energy and virial into global and per-atom accumulators
-   virial = r1F1 + r2F2 + r3F3 = (r1-r2) F1 + (r3-r2) F3 = del1*f1 + del2*f3
-------------------------------------------------------------------------- */
-
-void AngleAreaVolume3::ev_tally3(int i, int j, int k, int nlocal, int newton_bond, double eangle, 
-                                 double *f1, double *f2, double *f3, double *v)
-{
-  double eanglethird; //v[6];
-
-  if(eflag_either) {
-    if(eflag_global) {
-      if (newton_bond) energy += eangle;
-      else {
-        eanglethird = THIRD*eangle;
-        if (i < nlocal) energy += eanglethird;
-        if (j < nlocal) energy += eanglethird;
-        if (k < nlocal) energy += eanglethird;
-      }
-    }
-    if(eflag_atom) {
-      eanglethird = THIRD*eangle;
-      if (newton_bond || i < nlocal) eatom[i] += eanglethird;
-      if (newton_bond || j < nlocal) eatom[j] += eanglethird;
-      if (newton_bond || k < nlocal) eatom[k] += eanglethird;
-    }
-  }
-
-  if (vflag_either) {
-    if (vflag_global) {
-      if (newton_bond) {
-        virial[0] += v[0];
-        virial[1] += v[1];
-        virial[2] += v[2];
-        virial[3] += v[3];
-        virial[4] += v[4];
-        virial[5] += v[5];
-      } else {
-        if (i < nlocal) {
-          virial[0] += THIRD*v[0];
-          virial[1] += THIRD*v[1];
-          virial[2] += THIRD*v[2];
-          virial[3] += THIRD*v[3];
-          virial[4] += THIRD*v[4];
-          virial[5] += THIRD*v[5];
-        }
-        if (j < nlocal) {
-          virial[0] += THIRD*v[0];
-          virial[1] += THIRD*v[1];
-          virial[2] += THIRD*v[2];
-          virial[3] += THIRD*v[3];
-          virial[4] += THIRD*v[4];
-          virial[5] += THIRD*v[5];
-        }
-        if (k < nlocal) {
-          virial[0] += THIRD*v[0];
-          virial[1] += THIRD*v[1];
-          virial[2] += THIRD*v[2];
-          virial[3] += THIRD*v[3];
-          virial[4] += THIRD*v[4];
-          virial[5] += THIRD*v[5];
-        }
-      }
-    }
-
-    if (vflag_atom) {
-      if (newton_bond || i < nlocal) {
-        vatom[i][0] += THIRD*v[0];
-        vatom[i][1] += THIRD*v[1];
-        vatom[i][2] += THIRD*v[2];
-        vatom[i][3] += THIRD*v[3];
-        vatom[i][4] += THIRD*v[4];
-        vatom[i][5] += THIRD*v[5];
-      }
-      if (newton_bond || j < nlocal) {
-        vatom[j][0] += THIRD*v[0];
-        vatom[j][1] += THIRD*v[1];
-        vatom[j][2] += THIRD*v[2];
-        vatom[j][3] += THIRD*v[3];
-        vatom[j][4] += THIRD*v[4];
-        vatom[j][5] += THIRD*v[5];
-      }
-      if (newton_bond || k < nlocal) {
-        vatom[k][0] += THIRD*v[0];
-        vatom[k][1] += THIRD*v[1];
-        vatom[k][2] += THIRD*v[2];
-        vatom[k][3] += THIRD*v[3];
-        vatom[k][4] += THIRD*v[4];
-        vatom[k][5] += THIRD*v[5];
-      }
-    }
-  }
-}
