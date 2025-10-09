@@ -100,8 +100,8 @@ class AngleAreaVolume3Kokkos : public AngleAreaVolume3 {
   typename ArrayTypes<DeviceType>::tdual_ffloat_1d k_h_area, k_h_volume, k_dath, k_datt;
   typename ArrayTypes<DeviceType>::t_ffloat_1d d_h_area, d_h_volume, d_dath, d_datt;
 
-  typename ArrayTypes<DeviceType>::tdual_ffloat_1d k_setflag;
-  typename ArrayTypes<DeviceType>::t_ffloat_1d d_setflag;
+  typename ArrayTypes<DeviceType>::tdual_int_1d k_setflag;
+  typename ArrayTypes<DeviceType>::t_int_1d d_setflag;
 
   void allocate() override;
 };
