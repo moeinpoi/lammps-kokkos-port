@@ -44,7 +44,7 @@ class AngleAreaVolume3 : public Angle {
   int *ttyp,*ttyp1;
   int init_on;
   double *h_area,*h_volume,*dath,*datt;
-  tagint nm;
+  tagint nmol, nm;
 
   virtual void allocate();
 };

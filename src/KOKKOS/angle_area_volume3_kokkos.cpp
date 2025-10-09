@@ -110,10 +110,12 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   nlocal = atom->nlocal;
   newton_bond = force->newton_bond;
 
+  nm = 0;
+  nmol = 0;
   //find max mol ID in this rank
   atomKK->sync(execution_space, MOLECULE_MASK);
   Kokkos::parallel_reduce(Kokkos::RangePolicy<DeviceType>(0,nlocal),
-                          KOKKOS_LAMBDA(const int i, tagint& nnmol_loc){if (nnmol_loc < molecule(i)) nnmol_loc = molecule(i);},
+                          KOKKOS_LAMBDA(const int i, tagint& nmol_loc){if (nmol_loc < molecule(i)) nmol_loc = molecule(i);},
                           Kokkos::Max<tagint>(nmol));
 
   //highest mol ID in the entire sim (across all ranks) will be stored in nm
@@ -182,29 +184,32 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 
   MPI_Allreduce(d_dath,d_datt,2*nm,MPI_DOUBLE,MPI_SUM,world);
 
+  
+
   if (eflag) {
     for (int m = 0; m < nm; m++) {
-      type = ttyp[m];
+      bigint ntimestep = update->ntimestep;
+      const int type = ttyp[m];
 
-      if(update->ntimestep<nstep1[type]) {
-        voltemp=v0[type];
+      if(ntimestep < nstep1[type]) {
+        F_FLOAT voltemp = v0[type];
       }
-      if(update->ntimestep>=nstep1[type]&&update->ntimestep<=nstep2[type]) {
-        tempxxx=(update->ntimestep-nstep1[type])*1.0/((nstep2[type]-nstep1[type])*1.0);
+      if(ntimestep>=nstep1[type] && ntimestep<=nstep2[type]) {
+        F_FLOAT tempxxx=(ntimestep-nstep1[type])*1.0/((nstep2[type]-nstep1[type])*1.0);
         voltemp = v0[type]*(1.0+tempxxx*(vratio[type]-1.0));
       }
-      if(update->ntimestep>nstep2[type]) {
+      if(ntimestep > nstep2[type]) {
         voltemp=v0[type]*vratio[type];
       }
 
-      energy_a += 0.5*ka[type]*(a0[type]-datt[m])*(a0[type]-datt[m])/a0[type];
-      energy_v += 0.5*kv[type]*(voltemp-datt[m+nm])*(voltemp-datt[m+nm])/voltemp;
+      F_FLOAT energy_a += 0.5*ka[type]*(a0[type]-datt[m])*(a0[type]-datt[m])/a0[type];
+      F_FLOAT energy_v += 0.5*kv[type]*(voltemp-datt[m+nm])*(voltemp-datt[m+nm])/voltemp;
 
-      if(abs(a0[type])>0) tempxxx=ka[type]*(a0[type]-datt[m])/a0[type];
+      if(abs(a0[type]) > 0) tempxxx=ka[type]*(a0[type]-datt[m])/a0[type];
 
       if(comm->me==0) {
         printf("mol: %d/%d, area is %f, volume is %f, desired is %f %f, tension is %f, in step %d\n", 
-                m+1,nm, datt[m], datt[m+nm], a0[type], voltemp, tempxxx, update->ntimestep);
+                m+1,nm, datt[m], datt[m+nm], a0[type], voltemp, tempxxx, ntimestep);
       }
     }
   }

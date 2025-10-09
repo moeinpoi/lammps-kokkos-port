@@ -103,12 +103,10 @@ void AngleAreaVolume3::compute(int eflag, int vflag)
   double **f = atom->f;
   tagint *tag = atom->tag;
 
-  int i, nnmol;
-  nm = 0; 
+  nm = 0;
   nnmol = 0;
-
   //find max mol ID in this rank
-  for (i=0; i<nlocal; i++) {
+  for (int i=0; i<nlocal; i++) {
     if (nnmol < atom->molecule[i]) {
       nnmol = atom->molecule[i];
     }
