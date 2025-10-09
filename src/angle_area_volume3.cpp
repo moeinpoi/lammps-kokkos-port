@@ -145,7 +145,7 @@ void AngleAreaVolume3::compute(int eflag, int vflag)
     MPI_Allreduce(ttyp1,ttyp,nm,MPI_INT,MPI_MAX,world);
   }
 
-  eangle = 0.0
+  eangle = 0.0;
   if (eflag || vflag) ev_setup(eflag,vflag);
   else evflag = 0;
 
