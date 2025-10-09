@@ -420,9 +420,9 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   d21z = x(i2,2) - x(i1,2);
 
   // 3-1 distance
-  X_FLOAT d31x = x(i3,0) - x(i1,0);
-  X_FLOAT d31y = x(i3,1) - x(i1,1);
-  X_FLOAT d31z = x(i3,2) - x(i1,2);
+  d31x = x(i3,0) - x(i1,0);
+  d31y = x(i3,1) - x(i1,1);
+  d31z = x(i3,2) - x(i1,2);
 
   // 3-2 distance
   X_FLOAT d32x = x(i3,0) - x(i2,0);
@@ -483,7 +483,8 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   const F_FLOAT ttyp = d_ttyp[type];
   const F_FLOAT ttyp1 = d_ttyp1[type];
 
-  bigint ntimestep = update->ntimestep
+  bigint ntimestep = update->ntimestep;
+  F_FLAOT voltemp, tempxxx;
 
   if(ntimestep < nstep1) {
     voltemp = v0;
@@ -500,10 +501,9 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
 
   const F_FLOAT coefc = 0.25*press*qp / pow(0.5*nn,qp+2);
   const F_FLOAT coefl = 0.5*kl*(ar0-0.5*nn)/ar0/nn; 
-  const F_FLOAT coefa = 0.5*ka*(a0-datt(m))/a0/nn;
+  const F_FLOAT coefa = 0.5*ka*(a0-datt[m])/a0/nn;
   const F_FLOAT coefca = coefc + coefl + coefa;        
-  const F_FLOAT coefv = kv*(voltemp-datt(m+nm))/voltemp/18.0;
-
+  const F_FLOAT coefv = kv*(voltemp-datt[m+nm])/voltemp/18.0;
 
   // force & energy
 
@@ -585,7 +585,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   }
 
   F_FLOAT ff[6];
-  vv = 0.0; //2.0*datt[m+nm]*coefv/n_atoms[m];
+  F_FLOAT vv = 0.0; //2.0*datt[m+nm]*coefv/n_atoms[m];
   ff[0] = d21x*s2x + d31x*s3x + (d21x*(s2xv-s1xv)+d31x*(s3xv-s1xv)+d32x*(s3xv-s2xv))/3.0 + vv;
   ff[1] = d21y*s2y + d31y*s3y + (d21y*(s2yv-s1yv)+d31y*(s3yv-s1yv)+d32y*(s3yv-s2yv))/3.0 + vv;
   ff[2] = d21z*s2z + d31z*s3z + (d21z*(s2zv-s1zv)+d31z*(s3zv-s1zv)+d32z*(s3zv-s2zv))/3.0 + vv;
