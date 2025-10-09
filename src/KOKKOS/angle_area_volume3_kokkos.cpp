@@ -47,6 +47,10 @@ AngleAreaVolume3Kokkos<DeviceType>::AngleAreaVolume3Kokkos(LAMMPS *lmp) : AngleA
   datamask_read = X_MASK | X0_MASK | F_MASK | ENERGY_MASK | MOLECULE_MASK | IMAGE_MASK | VIRIAL_MASK; 
   datamask_modify = F_MASK | ENERGY_MASK | VIRIAL_MASK;
 
+  prd = Few<double,3>(domain_in->prd);
+  h   = Few<double,6>(domain_in->h);
+  triclinic = domain_in->triclinic;
+
   centroidstressflag = CENTROID_NOTAVAIL;
 }
 
@@ -169,16 +173,16 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   Kokkos::deep_copy(d_datt, 0);
   Kokkos::deep_copy(d_dath, 0);
 
-  auto prd = Few<double,3>(domain->prd);
-  auto h = Few<double,6>(domain->h);
-  auto triclinic = domain->triclinic;
+  // auto prd = Few<double,3>(domain->prd);
+  // auto h = Few<double,6>(domain->h);
+  // auto triclinic = domain->triclinic;
 
   copymode = 1;
 
   if (newton_bond)
-    Kokkos::parallel_reduce(Kokkos::RangePolicy<DeviceType, TagAngleAreaVolume3LocalLoop<1> >(0,nanglelist),*this);
+    Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagAngleAreaVolume3LocalLoop<1> >(0,nanglelist),*this);
   else
-    Kokkos::parallel_reduce(Kokkos::RangePolicy<DeviceType, TagAngleAreaVolume3LocalLoop<0> >(0,nanglelist),*this);
+    Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType, TagAngleAreaVolume3LocalLoop<0> >(0,nanglelist),*this);
 
   copymode = 0;
 
@@ -190,20 +194,21 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
     for (int m = 0; m < nm; m++) {
       bigint ntimestep = update->ntimestep;
       const int type = ttyp[m];
+      F_FLOAT voltemp, tempxxx, energy_a, energy_v;
 
       if(ntimestep < nstep1[type]) {
-        F_FLOAT voltemp = v0[type];
+        voltemp = v0[type];
       }
       if(ntimestep>=nstep1[type] && ntimestep<=nstep2[type]) {
-        F_FLOAT tempxxx=(ntimestep-nstep1[type])*1.0/((nstep2[type]-nstep1[type])*1.0);
+        tempxxx=(ntimestep-nstep1[type])*1.0/((nstep2[type]-nstep1[type])*1.0);
         voltemp = v0[type]*(1.0+tempxxx*(vratio[type]-1.0));
       }
       if(ntimestep > nstep2[type]) {
         voltemp=v0[type]*vratio[type];
       }
 
-      F_FLOAT energy_a += 0.5*ka[type]*(a0[type]-datt[m])*(a0[type]-datt[m])/a0[type];
-      F_FLOAT energy_v += 0.5*kv[type]*(voltemp-datt[m+nm])*(voltemp-datt[m+nm])/voltemp;
+      energy_a += 0.5*ka[type]*(a0[type]-datt[m])*(a0[type]-datt[m])/a0[type];
+      energy_v += 0.5*kv[type]*(voltemp-datt[m+nm])*(voltemp-datt[m+nm])/voltemp;
 
       if(abs(a0[type]) > 0) tempxxx=ka[type]*(a0[type]-datt[m])/a0[type];
 
@@ -290,7 +295,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3LocalLoop
   const X_FLOAT nz = d21x*d31y - d31x*d21y;
   const X_FLOAT nn = sqrt(nx*nx + ny*ny + nz*nz);
 
-  X_FLOAT[3] xx1, xx2, xx3;
+  X_FLOAT xx1[3], xx2[3], xx3[3];
   // calculate center
   for (int j = 0; j < 3; j++) {
     xx1[j] = x(i1,j);
@@ -298,6 +303,9 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3LocalLoop
     xx3[j] = x(i3,j); 
   }
 
+  // auto prd = Few<double,3>(domain->prd);
+  // auto h = Few<double,6>(domain->h);
+  // auto triclinic = domain->triclinic;
   if(i1<nlocal) {
     xx1 = DomainKokkos::unmap(prd,h,triclinic,xx1,image(i1));
     xx2 = DomainKokkos::unmap(prd,h,triclinic,xx2,image(i1));
@@ -413,14 +421,14 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   d21z = x(i2,2) - x(i1,2);
 
   // 3-1 distance
-  d31x = x(i3,0) - x(i1,0);
-  d31y = x(i3,1) - x(i1,1);
-  d31z = x(i3,2) - x(i1,2);
+  X_FLOAT d31x = x(i3,0) - x(i1,0);
+  X_FLOAT d31y = x(i3,1) - x(i1,1);
+  X_FLOAT d31z = x(i3,2) - x(i1,2);
 
   // 3-2 distance
-  d32x = x(i3,0) - x(i2,0);
-  d32y = x(i3,1) - x(i2,1);
-  d32z = x(i3,2) - x(i2,2);
+  X_FLOAT d32x = x(i3,0) - x(i2,0);
+  X_FLOAT d32y = x(i3,1) - x(i2,1);
+  X_FLOAT d32z = x(i3,2) - x(i2,2);
     
   // calculate normal
   nx = d21y*d31z - d31y*d21z;
@@ -429,7 +437,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   nn = sqrt(nx*nx + ny*ny + nz*nz);
 
   // calculate center
-  X_FLOAT[3] xx1, xx2, xx3;
+  X_FLOAT xx1[3], xx2[3], xx3[3];
   for (int j = 0; j < 3; j++) {
     xx1[j] = x(i1,j);
     xx2[j] = x(i2,j);

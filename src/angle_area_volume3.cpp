@@ -104,16 +104,16 @@ void AngleAreaVolume3::compute(int eflag, int vflag)
   tagint *tag = atom->tag;
 
   nm = 0;
-  nnmol = 0;
+  nmol = 0;
   //find max mol ID in this rank
   for (int i=0; i<nlocal; i++) {
-    if (nnmol < atom->molecule[i]) {
-      nnmol = atom->molecule[i];
+    if (nmol < atom->molecule[i]) {
+      nmol = atom->molecule[i];
     }
   }
 
   //highest mol ID in the entire sim (across all ranks) will be stored in nm
-  MPI_Allreduce(&nnmol,&nm,1,MPI_INT,MPI_MAX,world);
+  MPI_Allreduce(&nmol,&nm,1,MPI_INT,MPI_MAX,world);
 
   if (init_on == 0) {
 

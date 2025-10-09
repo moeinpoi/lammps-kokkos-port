@@ -85,6 +85,10 @@ class AngleAreaVolume3Kokkos : public AngleAreaVolume3 {
 
   int nlocal,newton_bond;
   int eflag,vflag;
+
+  Few<double,3> prd;
+  Few<double,6> h;
+  int triclinic;
   
   typename ArrayTypes<DeviceType>::tdual_ffloat_1d k_press, k_ka, k_a0, k_kv, k_v0, k_kl, k_aa0, k_r0, k_qp, k_vratio;
   typename ArrayTypes<DeviceType>::t_ffloat_1d d_press, d_ka, d_a0, d_kv, d_v0, d_kl, d_aa0, d_r0, d_qp, d_vratio;
