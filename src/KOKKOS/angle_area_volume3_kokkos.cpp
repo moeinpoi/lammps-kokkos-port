@@ -118,7 +118,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   nm = 0;
   nmol = 0;
   //find max mol ID in this rank
-  atomKK->sync(execution_space, MOLECULE_MASK);
+  atomKK->sync(execution_space, ALL_MASK);
   auto d_molecule = molecule; 
   Kokkos::parallel_reduce(Kokkos::RangePolicy<DeviceType>(0,nlocal),
                           KOKKOS_LAMBDA(const int i, tagint& nmol_loc){if (nmol_loc < d_molecule(i)) nmol_loc = d_molecule(i);},
