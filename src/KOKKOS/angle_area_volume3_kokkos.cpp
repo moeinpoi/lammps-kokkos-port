@@ -121,7 +121,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   atomKK->sync(execution_space, MOLECULE_MASK);
   Kokkos::parallel_reduce(Kokkos::RangePolicy<DeviceType>(0,nlocal),
                           KOKKOS_LAMBDA(const int i, tagint& nmol_loc){if (nmol_loc < molecule(i)) nmol_loc = molecule(i);},
-                          Kokkos::Max<tagint>(nmol));
+                          Kokkos::Max<int>(nmol));
 
   //highest mol ID in the entire sim (across all ranks) will be stored in nm
   MPI_Allreduce(&nmol,&nm,1,MPI_LMP_TAGINT,MPI_MAX,world);
