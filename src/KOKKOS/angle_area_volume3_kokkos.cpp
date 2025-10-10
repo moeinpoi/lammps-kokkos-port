@@ -154,6 +154,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
     const int nlocal_ = nlocal;
     d_molecule = molecule; 
     auto d_anglelist = anglelist; 
+    auto d_d_type1 = d_ttyp1;
     Kokkos::parallel_for(Kokkos::RangePolicy<DeviceType>(0,nanglelist),
                          KOKKOS_LAMBDA(int n){const int i1 = d_anglelist(n,0);
                                               const int i2 = d_anglelist(n,1);
@@ -162,7 +163,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
                                               if(i1<nlocal_) m = d_molecule(i1)-1;
                                               if(i2<nlocal_) m = d_molecule(i2)-1;
                                               if(i3<nlocal_) m = d_molecule(i3)-1;
-                                              if (m >= 0) Kokkos::atomic_max(&d_ttyp1(m), d_anglelist(n,3));
+                                              if (m >= 0) Kokkos::atomic_max(&d_d_ttyp1(m), d_anglelist(n,3));
                                               });
 
     k_ttyp1.template modify<DeviceType>();                                          
