@@ -44,6 +44,9 @@ DihedralBend2::DihedralBend2(LAMMPS *lmp) : Dihedral(lmp)
 
 DihedralBend2::~DihedralBend2()
 {
+
+  if (copymode) return;
+
   if (allocated) {
     memory->destroy(setflag);
     memory->destroy(k);
@@ -55,8 +58,8 @@ DihedralBend2::~DihedralBend2()
 
 void DihedralBend2::compute(int eflag, int vflag)
 {
-   double edihedral,f1[3],f2[3],f3[3],f4[3];
-  
+
+  double edihedral,f1[3],f2[3],f3[3],f4[3];
   int n,i1,i2,i3,i4,type;
   double d21x,d21y,d21z,d31x,d31y,d31z,d32x,d32y,d32z;
   double d34x,d34y,d34z,d24x,d24y,d24z,d14x,d14y,d14z;
@@ -67,20 +70,13 @@ void DihedralBend2::compute(int eflag, int vflag)
   double s1x,s1y,s1z,s2x,s2y,s2z,s3x,s3y,s3z,s4x,s4y,s4z;
   double ff[6];
   
-
   edihedral = 0.0;
   energy = 0.0;
   if (eflag || vflag) ev_setup(eflag,vflag);
   else evflag = 0;
 
   double **x = atom->x;
-
   double **x0 = atom->x0;
-//  int flag = 1; //1 for double values
-//  int cols = 3; //3 for x, y and z
-//  int index_custom = atom->find_custom("x0",flag, cols);
-//  double **x0 = atom->darray[index_custom];
-  
   double **f = atom->f;
   int **dihedrallist = neighbor->dihedrallist;
   int ndihedrallist = neighbor->ndihedrallist;
@@ -88,7 +84,6 @@ void DihedralBend2::compute(int eflag, int vflag)
   int newton_bond = force->newton_bond;
 
   for (n = 0; n < ndihedrallist; n++) {
-//    x = atom->x0;
     i1 = dihedrallist[n][0];
     i2 = dihedrallist[n][1];
     i3 = dihedrallist[n][2];
@@ -149,15 +144,8 @@ void DihedralBend2::compute(int eflag, int vflag)
     sintheta0 = sqrt(1.0-costheta0*costheta0); 
     if (sintheta0 < SMALL) sintheta0 = SMALL;
     mx = (n1x-n2x)*d14x + (n1y-n2y)*d14y + (n1z-n2z)*d14z;
-    if (mx < 0)
-      sintheta0 = -sintheta0;
+    if (mx < 0) sintheta0 = -sintheta0;
 
-
-
-
-/////////////////////// Calculate cos(theta)
-
-//    x = atom->x;
     i1 = dihedrallist[n][0];
     i2 = dihedrallist[n][1];
     i3 = dihedrallist[n][2];
@@ -218,8 +206,7 @@ void DihedralBend2::compute(int eflag, int vflag)
     sintheta = sqrt(1.0-costheta*costheta); 
     if (sintheta < SMALL) sintheta = SMALL;
     mx = (n1x-n2x)*d14x + (n1y-n2y)*d14y + (n1z-n2z)*d14z;
-    if (mx < 0)
-      sintheta = -sintheta;
+    if (mx < 0) sintheta = -sintheta;
      
     // coeffs calculation
     alfa = k[type]*(costheta0-costheta*sintheta0/sintheta);   
@@ -253,22 +240,21 @@ void DihedralBend2::compute(int eflag, int vflag)
       energy += k[type]*(1.0-mx);
     }
    
-    
-      f1[0] = s1x;
-      f1[1] = s1y;
-      f1[2] = s1z;
+    f1[0] = s1x;
+    f1[1] = s1y;
+    f1[2] = s1z;
 
-      f2[0] = s2x;
-      f2[1] = s2y;
-      f2[2] = s2z;
+    f2[0] = s2x;
+    f2[1] = s2y;
+    f2[2] = s2z;
 
-      f3[0] = s3x;
-      f3[1] = s3y;
-      f3[2] = s3z;
+    f3[0] = s3x;
+    f3[1] = s3y;
+    f3[2] = s3z;
 
-      f4[0] = s4x;
-      f4[1] = s4y;
-      f4[2] = s4z;
+    f4[0] = s4x;
+    f4[1] = s4y;
+    f4[2] = s4z;
 
     // apply force to each of 4 atoms
 
@@ -310,7 +296,7 @@ void DihedralBend2::compute(int eflag, int vflag)
 //fprintf(stderr,"f:%d,%f,%f,%f,%f,%f\n",n,alfa,f1[0],f1[1],f1[2],f2[0]);
     if (evflag)
       ev_tally(i1,i2,i3,i4,nlocal,newton_bond,edihedral,f1,f3,f4,
-	       -d21x,-d21y,-d21z,d32x,d32y,d32z,-d34x,-d34y,-d34z);
+	             -d21x,-d21y,-d21z,d32x,d32y,d32z,-d34x,-d34y,-d34z);
   }
 }
 
@@ -325,7 +311,6 @@ void DihedralBend2::allocate()
   memory->create(theta0,n+1,"dihedral:theta0");
   memory->create(setflag,n+1,"dihedral:setflag");
   for (int i = 1; i <= n; i++) setflag[i] = 0;
-
 }
 
 /* ----------------------------------------------------------------------
@@ -342,9 +327,6 @@ void DihedralBend2::coeff(int narg, char **arg)
 
   double k_one = utils::numeric(FLERR, arg[1], true, lmp);
   double theta0_one = utils::numeric(FLERR, arg[2], true,  lmp);
-
-
-
 
   int count = 0;
   for (int i = ilo; i <= ihi; i++) {
@@ -382,7 +364,6 @@ void DihedralBend2::read_restart(FILE *fp)
   }
   MPI_Bcast(&k[1],atom->ndihedraltypes,MPI_DOUBLE,0,world);
   MPI_Bcast(&theta0[1],atom->ndihedraltypes,MPI_DOUBLE,0,world);
-
 
   for (int i = 1; i <= atom->ndihedraltypes; i++) {
     setflag[i] = 1;
