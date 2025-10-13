@@ -151,6 +151,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
     Kokkos::deep_copy(d_ttyp, 0);
 
     atomKK->sync(execution_space, MOLECULE_MASK | ANGLE_MASK);
+    k_ttyp1.template sync<DeviceType>();
     const int nlocal_ = nlocal;
     d_molecule = molecule; 
     auto d_anglelist = anglelist; 
