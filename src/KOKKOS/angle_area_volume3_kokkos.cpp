@@ -151,7 +151,6 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
     Kokkos::deep_copy(d_ttyp, 0);
 
     atomKK->sync(execution_space, MOLECULE_MASK | ANGLE_MASK);
-    k_ttyp1.template sync<DeviceType>();
     const int nlocal_ = nlocal;
     d_molecule = molecule; 
     auto d_anglelist = anglelist; 
@@ -488,8 +487,8 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   const F_FLOAT vratio = d_vratio[type];
   const F_FLOAT nstep1 = d_nstep1[type];
   const F_FLOAT nstep2 = d_nstep2[type];
-  const F_FLOAT ttyp = d_ttyp[type];
-  const F_FLOAT ttyp1 = d_ttyp1[type];
+  // const F_FLOAT ttyp = d_ttyp[type];
+  // const F_FLOAT ttyp1 = d_ttyp1[type];
 
   bigint ntimestep = update->ntimestep;
   F_FLOAT voltemp, tempxxx;
