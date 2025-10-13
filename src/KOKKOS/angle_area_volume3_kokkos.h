@@ -87,6 +87,8 @@ class AngleAreaVolume3Kokkos : public AngleAreaVolume3 {
   int nlocal,newton_bond;
   int eflag,vflag;
 
+  bigint ntimestep;
+
   Few<double,3> prd;
   Few<double,6> h;
   int triclinic;
