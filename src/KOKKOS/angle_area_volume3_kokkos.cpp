@@ -203,7 +203,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
   MPI_Allreduce(dath,datt,2*nm,MPI_DOUBLE,MPI_SUM,world);
 
   F_FLOAT voltemp, tempxxx, energy_a, energy_v;
-  bigint ntimestep = update->ntimestep;
+  ntimestep = update->ntimestep;
   energy_a = 0;
   energy_v = 0;
   if (eflag) {
@@ -490,7 +490,6 @@ void AngleAreaVolume3Kokkos<DeviceType>::operator()(TagAngleAreaVolume3Compute<N
   // const F_FLOAT ttyp = d_ttyp[type];
   // const F_FLOAT ttyp1 = d_ttyp1[type];
 
-  bigint ntimestep = update->ntimestep;
   F_FLOAT voltemp, tempxxx;
 
   if(ntimestep < nstep1) {
