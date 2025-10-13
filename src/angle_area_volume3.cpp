@@ -46,7 +46,9 @@ AngleAreaVolume3::AngleAreaVolume3(LAMMPS *lmp) : Angle(lmp)
 
 AngleAreaVolume3::~AngleAreaVolume3()
 {
-  if (allocated && !copymode) {
+  if (copymode) return;
+
+  if (allocated) {
     memory->destroy(setflag);
     memory->destroy(ka);
     memory->destroy(a0);
@@ -60,15 +62,6 @@ AngleAreaVolume3::~AngleAreaVolume3()
     memory->destroy(nstep1);
     memory->destroy(nstep2);
     memory->destroy(vratio);
-  }
-
-  if (init_on && !copymode) {
-    memory->destroy(h_area);
-    memory->destroy(h_volume);
-    memory->destroy(ttyp);
-    memory->destroy(ttyp1);
-    memory->destroy(dath);
-    memory->destroy(datt);
   }
 }
 

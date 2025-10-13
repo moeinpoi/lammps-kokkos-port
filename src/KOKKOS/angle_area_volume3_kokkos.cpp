@@ -62,6 +62,15 @@ AngleAreaVolume3Kokkos<DeviceType>::~AngleAreaVolume3Kokkos()
   if (!copymode) {
     memoryKK->destroy_kokkos(k_eatom,eatom);
     memoryKK->destroy_kokkos(k_vatom,vatom);
+
+    if (init_on) {
+      memoryKK->destroy_kokkos(k_h_area,h_area);
+      memoryKK->destroy_kokkos(k_h_volume,h_volume);
+      memoryKK->destroy_kokkos(k_ttyp,ttyp);
+      memoryKK->destroy_kokkos(k_ttyp1,ttyp1);
+      memoryKK->destroy_kokkos(k_dath,dath);
+      memoryKK->destroy_kokkos(k_datt,datt);
+    }
   }
 }
 
