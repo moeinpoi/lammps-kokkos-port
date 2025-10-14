@@ -23,7 +23,7 @@ DihedralStyle(bend2/kk/host,DihedralBend2Kokkos<LMPHostType>);
 #ifndef LMP_DIHEDRAL_BEND2_KOKKOS_H
 #define LMP_DIHEDRAL_BEND2_KOKKOS_H
 
-#include "dihedral_.h"
+#include "dihedral_bend2.h"
 #include "kokkos_type.h"
 
 namespace LAMMPS_NS {
