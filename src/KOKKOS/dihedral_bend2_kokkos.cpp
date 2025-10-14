@@ -68,8 +68,6 @@ template<class DeviceType>
 void DihedralBend2Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 {
 
-  F_FLOAT edihedral = 0.0;
-  F_FLOAT energy = 0.0;
   eflag = eflag_in;
   vflag = vflag_in;
 
@@ -262,10 +260,10 @@ void DihedralBend2Kokkos<DeviceType>::operator()(TagDihedralBend2Compute<NEWTON_
   nn = sqrt(n1*n2);  
 
   // cos(theta) and sin(theta) calculation 
-  costheta = (n1x*n2x + n1y*n2y + n1z*n2z)/nn; 
+  F_FLOAT costheta = (n1x*n2x + n1y*n2y + n1z*n2z)/nn; 
   if (costheta > 1.0) costheta = 1.0;
   if (costheta < -1.0) costheta = -1.0;
-  sintheta = sqrt(1.0-costheta*costheta); 
+  F_FLOAT sintheta = sqrt(1.0-costheta*costheta); 
   if (sintheta < SMALL) sintheta = SMALL;
   mx = (n1x-n2x)*d14x + (n1y-n2y)*d14y + (n1z-n2z)*d14z;
   if (mx < 0) sintheta = -sintheta;
@@ -297,6 +295,9 @@ void DihedralBend2Kokkos<DeviceType>::operator()(TagDihedralBend2Compute<NEWTON_
   const F_FLOAT s4x = a22*(n2z*d32y - n2y*d32z) + a12*(n1z*d32y - n1y*d32z);
   const F_FLOAT s4y = a22*(n2x*d32z - n2z*d32x) + a12*(n1x*d32z - n1z*d32x);
   const F_FLOAT s4z = a22*(n2y*d32x - n2x*d32y) + a12*(n1y*d32x - n1x*d32y);
+
+  F_FLOAT edihedral = 0.0;
+  F_FLOAT energy = 0.0;
 
   if (eflag){
       mx = costheta*costheta0 + sintheta*sintheta0;
@@ -370,7 +371,7 @@ void DihedralBend2Kokkos<DeviceType>::allocate()
   k_theta0 = DAT::tdual_ffloat_1d("DihedralBend2::theta0",n+1);
 
   d_k = k_k.template view<DeviceType>();
-  d_theta0 = k_cos_shift.template view<DeviceType>();
+  d_theta0 = k_theta0.template view<DeviceType>();
 }
 
 /* ----------------------------------------------------------------------

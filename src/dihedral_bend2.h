@@ -38,7 +38,7 @@ class DihedralBend2 : public Dihedral {
  protected:
   double *k,*theta0;
 
-  void allocate();
+  virtual void allocate();
 };
 
 }
