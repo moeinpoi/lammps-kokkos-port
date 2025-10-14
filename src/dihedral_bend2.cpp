@@ -240,55 +240,55 @@ void DihedralBend2::compute(int eflag, int vflag)
       energy += k[type]*(1.0-mx);
     }
    
-    // f1[0] = s1x;
-    // f1[1] = s1y;
-    // f1[2] = s1z;
+    f1[0] = s1x;
+    f1[1] = s1y;
+    f1[2] = s1z;
 
-    // f2[0] = s2x;
-    // f2[1] = s2y;
-    // f2[2] = s2z;
+    f2[0] = s2x;
+    f2[1] = s2y;
+    f2[2] = s2z;
 
-    // f3[0] = s3x;
-    // f3[1] = s3y;
-    // f3[2] = s3z;
+    f3[0] = s3x;
+    f3[1] = s3y;
+    f3[2] = s3z;
 
-    // f4[0] = s4x;
-    // f4[1] = s4y;
-    // f4[2] = s4z;
+    f4[0] = s4x;
+    f4[1] = s4y;
+    f4[2] = s4z;
 
     // apply force to each of 4 atoms
 
     if (newton_bond || i1 < nlocal) {
-      f1[0] = s1x;
-      f1[1] = s1y;
-      f1[2] = s1z;
+      // f1[0] = s1x;
+      // f1[1] = s1y;
+      // f1[2] = s1z;
       f[i1][0] += f1[0];
       f[i1][1] += f1[1];
       f[i1][2] += f1[2];
     }
 
     if (newton_bond || i2 < nlocal) {
-      f2[0] = s2x;
-      f2[1] = s2y;
-      f2[2] = s2z;
+      // f2[0] = s2x;
+      // f2[1] = s2y;
+      // f2[2] = s2z;
       f[i2][0] += f2[0];
       f[i2][1] += f2[1];
       f[i2][2] += f2[2];
     }
 
     if (newton_bond || i3 < nlocal) {
-      f3[0] = s3x;
-      f3[1] = s3y;
-      f3[2] = s3z;
+      // f3[0] = s3x;
+      // f3[1] = s3y;
+      // f3[2] = s3z;
       f[i3][0] += f3[0];
       f[i3][1] += f3[1];
       f[i3][2] += f3[2];
     }
 
     if (newton_bond || i4 < nlocal) {
-      f4[0] = s4x;
-      f4[1] = s4y;
-      f4[2] = s4z;
+      // f4[0] = s4x;
+      // f4[1] = s4y;
+      // f4[2] = s4z;
       f[i4][0] += f4[0];
       f[i4][1] += f4[1];
       f[i4][2] += f4[2];
