@@ -240,21 +240,21 @@ void DihedralBend2::compute(int eflag, int vflag)
       energy += k[type]*(1.0-mx);
     }
    
-    f1[0] = s1x;
-    f1[1] = s1y;
-    f1[2] = s1z;
+    // f1[0] = s1x;
+    // f1[1] = s1y;
+    // f1[2] = s1z;
 
-    f2[0] = s2x;
-    f2[1] = s2y;
-    f2[2] = s2z;
+    // f2[0] = s2x;
+    // f2[1] = s2y;
+    // f2[2] = s2z;
 
-    f3[0] = s3x;
-    f3[1] = s3y;
-    f3[2] = s3z;
+    // f3[0] = s3x;
+    // f3[1] = s3y;
+    // f3[2] = s3z;
 
-    f4[0] = s4x;
-    f4[1] = s4y;
-    f4[2] = s4z;
+    // f4[0] = s4x;
+    // f4[1] = s4y;
+    // f4[2] = s4z;
 
     // apply force to each of 4 atoms
 
