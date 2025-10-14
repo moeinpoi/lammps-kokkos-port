@@ -239,7 +239,7 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
       // if(comm->me==0) {
       //   printf("mol: %d/%d, area is %f, volume is %f, desired is %f %f, tension is %f, in step %d\n", 
       //           m+1,nm, datt[m], datt[m+nm], a0[type], voltemp, tempxxx, ntimestep);
-      }
+      // }
     }
   }
 
