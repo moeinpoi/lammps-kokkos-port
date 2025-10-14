@@ -79,6 +79,7 @@ AngleAreaVolume3Kokkos<DeviceType>::~AngleAreaVolume3Kokkos()
 template<class DeviceType>
 void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 {
+	fprintf(screen, "compute() called on AngleAreaVolume3 kokkos\n");
   eflag = eflag_in;
   vflag = vflag_in;
 
