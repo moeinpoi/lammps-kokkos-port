@@ -1,0 +1,5 @@
+
+# Ignore large build/data files
+lib/atc/*.a
+potentials/*.mesocnt
+

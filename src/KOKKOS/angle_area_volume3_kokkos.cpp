@@ -79,6 +79,7 @@ AngleAreaVolume3Kokkos<DeviceType>::~AngleAreaVolume3Kokkos()
 template<class DeviceType>
 void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 {
+	fprintf(screen, "compute() called on AngleAreaVolume3 kokkos\n");
   eflag = eflag_in;
   vflag = vflag_in;
 
@@ -235,10 +236,10 @@ void AngleAreaVolume3Kokkos<DeviceType>::compute(int eflag_in, int vflag_in)
 
       if(abs(a0[type]) > 0) tempxxx=ka[type]*(a0[type]-datt[m])/a0[type];
 
-      if(comm->me==0) {
-        printf("mol: %d/%d, area is %f, volume is %f, desired is %f %f, tension is %f, in step %d\n", 
-                m+1,nm, datt[m], datt[m+nm], a0[type], voltemp, tempxxx, ntimestep);
-      }
+      // if(comm->me==0) {
+      //   printf("mol: %d/%d, area is %f, volume is %f, desired is %f %f, tension is %f, in step %d\n", 
+      //           m+1,nm, datt[m], datt[m+nm], a0[type], voltemp, tempxxx, ntimestep);
+      // }
     }
   }
 
